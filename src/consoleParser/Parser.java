@@ -14,7 +14,7 @@ public class Parser extends Thread{
         Scanner cin = new Scanner(System.in);
         while(processing_semaphore){
             System.out.print(">>>");
-            String cdata= cin.next();
+            String cdata= cin.nextLine();
             System.out.println("echo: "+cdata);
         }
     }

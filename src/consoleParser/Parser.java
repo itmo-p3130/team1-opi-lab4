@@ -4,18 +4,19 @@ import java.util.Scanner;
 
 public class Parser extends Thread{
     private final String name;
-    private boolean processing_semaphore;
-    public Parser(String name, boolean semaphore){
+    public Thread processing_semaphore;
+    public Parser(String name, Thread semaphore){
     /*Start logging -> Main parser thread activation*/
         this.name=name;
         this.processing_semaphore=semaphore;
     }
+    @Override
     public void run(){
         Scanner cin = new Scanner(System.in);
-        while(processing_semaphore){
+        while(processing_semaphore.isAlive()){
             System.out.print(">>>");
             String cdata= cin.nextLine();
-            System.out.println("echo: "+cdata);
+            System.out.println("echo: "+cdata+" "+processing_semaphore);
         }
     }
 }

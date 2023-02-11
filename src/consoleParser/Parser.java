@@ -1,7 +1,8 @@
 package consoleParser;
 
 import java.util.Scanner;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 public class Parser extends Thread{
     private final String name;
     public Thread processing_semaphore;
@@ -13,6 +14,7 @@ public class Parser extends Thread{
     @Override
     public void run(){
         Scanner cin = new Scanner(System.in);
+        System.out.println("\u001B[32mStarted at "+ (new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date()))+ " @ Made by Alex P3130 2022/2023\u001B[0m");
         while(processing_semaphore.isAlive()){
             System.out.print(">>>");
             String cdata= cin.nextLine();

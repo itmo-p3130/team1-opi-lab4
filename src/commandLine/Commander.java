@@ -16,7 +16,17 @@ public class Commander extends Thread implements conveyor{
         String command_raw = conveyor.comm.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
-        String command_args = command_splited[1];
+        String command_args;
+        if(command_splited.length>=2){
+            command_args = command_splited[1];
+        }else{
+            command_args="";
+        }
+
+        for(allCommands command_exmp : allCommands.values()){
+            System.out.println(getLevenshteinDistance(command_exmp.name(), command_base));
+        }
+        conveyor.comm.remove(0);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;
@@ -43,7 +53,9 @@ public class Commander extends Thread implements conveyor{
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
-
+            while(!conveyor.comm.isEmpty()){
+                nextCommand();
+            }
         }
     }
 }

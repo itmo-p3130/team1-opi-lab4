@@ -1,8 +1,11 @@
 package commandLine;
-
-import java.util.ArrayList;
-
+import commandLine.command;
 public class Commands {
-    static ArrayList<String>commands=new ArrayList<String>();
-    //Commands(String semantic, )
+    Commands(){}
+    public static class help implements command{
+        help(){}
+        public void execute(){};
+        public void repeat(){};
+        public void set_next_command(command com){};
+    }
 }

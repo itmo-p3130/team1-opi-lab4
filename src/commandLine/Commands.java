@@ -7,7 +7,10 @@ public class Commands implements conveyor {
     Commands(){}
     public static class command_help implements command{
         command_help(){}
-        public void execute(){conveyor.answ.add(new Answer(condition.finished,"Info-stroke"));};
+        public void execute(){
+            Answer answ = new Answer(condition.finished,"Info-stroke");
+            conveyor.answ.add(answ);
+        };
         public void repeat(){};
         public void set_next_command(command com){};
     }
@@ -109,6 +112,18 @@ public class Commands implements conveyor {
     }
     public static class command_queue implements command{
         command_queue(){}
+        public void execute(){};
+        public void repeat(){};
+        public void set_next_command(command com){};
+    }
+    public static class command_sys_load_file implements command{
+        command_sys_load_file(){}
+        public void execute(){};
+        public void repeat(){};
+        public void set_next_command(command com){};
+    }
+    public static class command_sys_closest_command implements command{
+        command_sys_closest_command(){}
         public void execute(){};
         public void repeat(){};
         public void set_next_command(command com){};

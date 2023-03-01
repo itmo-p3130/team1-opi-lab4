@@ -1,4 +1,7 @@
 package commandLine;
+import commandLine.Commands;
+import dataStruct.Answer;
+import dataStruct.condition;
 
 public class Commander extends Thread implements conveyor{
     private final String name;
@@ -24,9 +27,18 @@ public class Commander extends Thread implements conveyor{
         }
 
         for(allCommands command_exmp : allCommands.values()){
-            System.out.println(getLevenshteinDistance(command_exmp.name(), command_base));
+            if(getLevenshteinDistance(command_exmp.name(), command_base)==0){
+                switch (command_exmp){
+                    case help -> addCommandToQueue(new Commands.command_help());
+
+                }
+                conveyor.commands_ready.remove(0);
+                break;
+            }
         }
         conveyor.comm.remove(0);
+        Answer answ = new Answer(condition.finished,"");
+        conveyor.answ.add(answ);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;
@@ -53,9 +65,21 @@ public class Commander extends Thread implements conveyor{
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
-            while(!conveyor.comm.isEmpty()){
+            if(!conveyor.comm.isEmpty()){
                 nextCommand();
+
+            }
+            if(!conveyor.commands_ready.isEmpty()){
+                command current_command = conveyor.commands_ready.get(0);
+                current_command.execute();
+                conveyor.commands_ready.remove(0);
             }
         }
+    }
+    private void addCommandToQueue(command com){
+        conveyor.commands_ready.add(com);
+    }
+    private void executeNextCommand(){
+
     }
 }

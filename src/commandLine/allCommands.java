@@ -18,5 +18,6 @@ enum allCommands{
     count_less_than_location,
     count_greater_than_weight,
     skip,
-    queue
+    queue,
+    load
 }

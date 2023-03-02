@@ -32,7 +32,6 @@ public class Commander extends Thread implements conveyor{
                     case help -> addCommandToQueue(new Commands.command_help());
 
                 }
-                conveyor.commands_ready.remove(0);
                 break;
             }
         }
@@ -66,9 +65,16 @@ public class Commander extends Thread implements conveyor{
     public void run(){
         while (processing_semaphore.isAlive()){
             if(!conveyor.comm.isEmpty()){
+                System.out.println("Commands:"+conveyor.comm.size());
                 nextCommand();
+                System.out.println("CommandsR:"+conveyor.commands_ready.size());
+                System.out.println("Answers:"+conveyor.answ.size());
 
+//                while (true) {
+//                    System.out.println("Commander: " + conveyor.answ.size());
+//                }
             }
+
             if(!conveyor.commands_ready.isEmpty()){
                 command current_command = conveyor.commands_ready.get(0);
                 current_command.execute();
@@ -82,4 +88,5 @@ public class Commander extends Thread implements conveyor{
     private void executeNextCommand(){
 
     }
+
 }

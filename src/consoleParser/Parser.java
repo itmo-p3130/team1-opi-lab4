@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import commandLine.conveyor;
 import dataStruct.Answer;
-
 public class Parser extends Thread implements conveyor{
     private final String name;
     public Thread processing_semaphore;
@@ -20,23 +19,28 @@ public class Parser extends Thread implements conveyor{
         while(processing_semaphore.isAlive()){
             if(conveyor.answ.size()>0){
                 Answer answ = conveyor.answ.get(0);
-                switch (answ.condition){
-                    case finished :
-                        break;
-                    default:
-                        break;
-                }
+//                switch (answ.condition) {
+//                    case finished:
+//                        next;
+//                    default:
+//                        break;
+//                }
+                System.out.println(answ.answer);
+                conveyor.answ.remove(0);
             }else {
                 System.out.print(">>>");
                 String cdata = scan.nextLine();
                 sendToCommander(cdata);//try{Thread.sleep(100);}catch (InterruptedException ex){;};
+                System.out.println("Metka0");
+                //try{Thread.sleep(100);}catch (InterruptedException ex){System.out.println(cout());}
+                System.out.println("Metka1");
                 waitForAnswer();
                 Answer answ = conveyor.answ.get(0);
 
                 if(answ.answer.length() != 0) {
                     System.out.println(answ.answer);
                 }
-                conveyor.answ.remove(0);
+                //conveyor.answ.remove(0);
                 System.out.println("answ:" + conveyor.answ.size() + " comm:" + conveyor.comm.size() + " comready:" + conveyor.commands_ready.size());
             }
             //System.out.println("echo: "+cdata+" "+cdata.length());
@@ -49,5 +53,11 @@ public class Parser extends Thread implements conveyor{
     private void waitForAnswer(){
         while(conveyor.answ.size()==0){;}
     }
-
+    private String cout(){
+        String all = "";
+        for(Answer a: conveyor.answ){
+            all+=a.condition+":"+a.answer+";";
+        }
+        return all;
+    }
 }

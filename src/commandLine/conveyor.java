@@ -3,6 +3,8 @@ package commandLine;
 import dataStruct.Answer;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 public interface conveyor {
     ArrayList<String> comm = new ArrayList<String>();

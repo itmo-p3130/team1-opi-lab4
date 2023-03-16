@@ -18,6 +18,7 @@ public class Parser extends Thread implements conveyor{
         System.out.println("\u001B[32mStarted at "+ (new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date()))+ " @ Made by Alex P3130 2022/2023\u001B[0m");
         while(processing_semaphore.isAlive()){
             if(conveyor.answ.size()>0){
+                System.out.println("First if start now");
                 Answer answ = conveyor.answ.get(0);
 //                switch (answ.condition) {
 //                    case finished:
@@ -31,12 +32,13 @@ public class Parser extends Thread implements conveyor{
                 System.out.print(">>>");
                 String cdata = scan.nextLine();
                 sendToCommander(cdata);//try{Thread.sleep(100);}catch (InterruptedException ex){;};
-                System.out.println("Metka0");
                 //try{Thread.sleep(100);}catch (InterruptedException ex){System.out.println(cout());}
-                System.out.println("Metka1");
+                //System.out.println(conveyor.add_sem.hasQueuedThreads());
+                System.out.println("Send data to commander");
                 waitForAnswer();
+                System.out.println("awitForAnswer()");
                 Answer answ = conveyor.answ.get(0);
-
+                System.out.println("answ.get(0)");
                 if(answ.answer.length() != 0) {
                     System.out.println(answ.answer);
                 }
@@ -51,7 +53,8 @@ public class Parser extends Thread implements conveyor{
         conveyor.comm.add(rawCommand);
     }
     private void waitForAnswer(){
-        while(conveyor.answ.size()==0){;}
+        while(conveyor.answ.size()==0){}
+        //while(conveyor.answ.size()==0){System.out.println(conveyor.answ.size());}System.out.println(conveyor.answ.size());
     }
     private String cout(){
         String all = "";

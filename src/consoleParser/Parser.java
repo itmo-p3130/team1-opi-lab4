@@ -36,6 +36,7 @@ public class Parser extends Thread implements conveyor{
                 //try{Thread.sleep(100);}catch (InterruptedException ex){System.out.println(cout());}
                 //System.out.println(conveyor.add_sem.hasQueuedThreads());
                 System.out.println("Send data to commander");
+                try{Thread.sleep(1700);}catch (InterruptedException e){;}
                 waitForAnswer();
                 System.out.println("awitForAnswer()");
                 System.out.println("Parser thinking that size is:"+conveyor.answ.size());

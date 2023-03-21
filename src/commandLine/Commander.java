@@ -42,8 +42,8 @@ public class Commander extends Thread implements conveyor{
             }
         }
         conveyor.comm.remove(0);
-        //Answer answ = new Answer(condition.finished,"");
-        //conveyor.answ.add(answ);
+        Answer answ = new Answer(command_condition.finished,"");
+        conveyor.answ.add(answ);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;
@@ -82,6 +82,8 @@ public class Commander extends Thread implements conveyor{
                 lock();
                 try {
                     System.out.println("Started commands detaction");
+                    //try{Thread.sleep(2500);}catch (InterruptedException e){;}
+
                     command current_command = conveyor.commands_ready.get(0);
                     current_command.execute();
                     conveyor.commands_ready.remove(0);
@@ -94,6 +96,7 @@ public class Commander extends Thread implements conveyor{
                     System.out.println("Commander thinks that the locker is locked(before unlock): "+conveyor.lock.isLocked());
                     unlock();
                     System.out.println("Commander thinks that the size of the array(after unlock): "+conveyor.answ.size());
+                    System.out.println("Commander thinks that the locker is locked(after unlock): "+conveyor.lock.isLocked());
                 }
                 System.out.println("Commander thinks that the size of the array(the end of command execution cycle): "+conveyor.answ.size());
             }

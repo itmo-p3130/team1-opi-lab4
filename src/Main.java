@@ -10,8 +10,9 @@ public class Main {
     public static void main(String[] args) {
         Parser prs = new Parser("Main parser thread",Thread.currentThread());
         Commander com = new Commander("Main commander thread",Thread.currentThread());
-        prs.start();
         com.start();
+        prs.start();
+
         //try{Thread.sleep(5000);}catch (InterruptedException ex){;}
         //com.printAll();
         while(prs.isAlive()){}//I'll change it to prs.join(), but later

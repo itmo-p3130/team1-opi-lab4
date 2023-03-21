@@ -1,16 +1,20 @@
 package commandLine;
 import commandLine.Commands;
 import dataStruct.Answer;
-import dataStruct.condition;
+import dataStruct.command_condition;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Commander extends Thread implements conveyor{
     private final String name;
+    //private CondtitionThread condition;
     public Thread processing_semaphore;
     public Commander(String name, Thread semaphore){
         this.name = name;
         this.processing_semaphore=semaphore;
+        //this.condition = new CondtitionThread();
     }
     public void printAll(){
         for(String s:comm){
@@ -67,25 +71,31 @@ public class Commander extends Thread implements conveyor{
     public void run(){
         while (processing_semaphore.isAlive()){
             if(!conveyor.comm.isEmpty()){
-
                 nextCommand();
-                System.out.println("Commands:"+conveyor.comm.size());
-                System.out.println("CommandsR:"+conveyor.commands_ready.size());
-                System.out.println("Answers:"+conveyor.answ.size());
+                System.out.println("Commands:" + conveyor.comm.size());
+                System.out.println("CommandsR:" + conveyor.commands_ready.size());
+                System.out.println("Answers:" + conveyor.answ.size());
 
-//                while (true) {
-//                    System.out.println("Commander: " + conveyor.answ.size());
-//                }
             }
 
             if(!conveyor.commands_ready.isEmpty()){
-                System.out.println("Started commands detaction");
-                command current_command = conveyor.commands_ready.get(0);
-                current_command.execute();
-                conveyor.commands_ready.remove(0);
-                System.out.println("Commands:"+conveyor.comm.size());
-                System.out.println("CommandsR:"+conveyor.commands_ready.size());
-                System.out.println("Answers:"+conveyor.answ.size());
+                lock();
+                try {
+                    System.out.println("Started commands detaction");
+                    command current_command = conveyor.commands_ready.get(0);
+                    current_command.execute();
+                    conveyor.commands_ready.remove(0);
+                    System.out.println("Commands:" + conveyor.comm.size());
+                    System.out.println("CommandsR:" + conveyor.commands_ready.size());
+                    System.out.println("Answers:" + conveyor.answ.size());
+                    signal();
+                } finally {
+                    System.out.println("Commander thinks that the size of the array(before unlock): "+conveyor.answ.size());
+                    System.out.println("Commander thinks that the locker is locked(before unlock): "+conveyor.lock.isLocked());
+                    unlock();
+                    System.out.println("Commander thinks that the size of the array(after unlock): "+conveyor.answ.size());
+                }
+                System.out.println("Commander thinks that the size of the array(the end of command execution cycle): "+conveyor.answ.size());
             }
         }
     }
@@ -96,5 +106,13 @@ public class Commander extends Thread implements conveyor{
     private void executeNextCommand(){
 
     }
-
+    private void lock(){
+        conveyor.lock.lock();
+    }
+    private void unlock(){
+        conveyor.lock.unlock();
+    }
+    private void signal(){
+        conveyor.condition.signalAll();
+    }
 }

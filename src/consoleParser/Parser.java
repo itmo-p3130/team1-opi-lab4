@@ -2,6 +2,7 @@ package consoleParser;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import commandLine.conveyor;
 import dataStruct.Answer;
 public class Parser extends Thread implements conveyor{
@@ -9,8 +10,8 @@ public class Parser extends Thread implements conveyor{
     public Thread processing_semaphore;
     public Parser(String name, Thread semaphore){
     /*Start logging -> Main parser thread activation*/
-        this.name=name;
-        this.processing_semaphore=semaphore;
+        this.name = name;
+        this.processing_semaphore = semaphore;
     }
     @Override
     public void run(){
@@ -37,6 +38,7 @@ public class Parser extends Thread implements conveyor{
                 System.out.println("Send data to commander");
                 waitForAnswer();
                 System.out.println("awitForAnswer()");
+                System.out.println("Parser thinking that size is:"+conveyor.answ.size());
                 Answer answ = conveyor.answ.get(0);
                 System.out.println("answ.get(0)");
                 if(answ.answer.length() != 0) {
@@ -53,7 +55,9 @@ public class Parser extends Thread implements conveyor{
         conveyor.comm.add(rawCommand);
     }
     private void waitForAnswer(){
-        while(conveyor.answ.size()==0){}
+        System.out.println("Parser thinking that size is(before while(locket.isUnlock())):"+conveyor.answ.size());
+        while(conveyor.lock.isLocked()){System.out.println("locker is locked");}
+        System.out.println("Parser thinking that size is(after while(locket.isUnlock())):"+conveyor.answ.size());
         //while(conveyor.answ.size()==0){System.out.println(conveyor.answ.size());}System.out.println(conveyor.answ.size());
     }
     private String cout(){

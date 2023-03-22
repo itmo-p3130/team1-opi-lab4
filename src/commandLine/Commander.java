@@ -1,11 +1,11 @@
 package commandLine;
-import commandLine.Commands;
 import dataStruct.Answer;
 import dataStruct.command_condition;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Commander extends Thread {
     private final String name;
@@ -28,18 +28,36 @@ public class Commander extends Thread {
         }else{
             command_args="";
         }
-
+        if(command_base.length()==0){
+            Conveyor.cmd.remove(0);
+            Answer answ = new Answer(command_condition.finished,"");
+            Conveyor.answer.add(answ);
+            return;
+        }
+        ArrayList<allCommands> lvt_commands= new ArrayList<allCommands>();
+        int min_levDist = 10096;
         for(allCommands command_exmp : allCommands.values()){
-            if(getLevenshteinDistance(command_exmp.name(), command_base)==0){
+            int levDist = getLevenshteinDistance(command_exmp.name(), command_base);
+            if(levDist<min_levDist){
+                lvt_commands.clear();
+                lvt_commands.add(command_exmp);
+                min_levDist=Math.min(levDist,min_levDist);
+            } else if(levDist==min_levDist) {
+                lvt_commands.add(command_exmp);
+                min_levDist=Math.min(levDist,min_levDist);
+            }
+            if(levDist==0){
                 switch (command_exmp){
                     case help -> addCommandToQueue(new Commands.command_help());
 
                 }
-                break;
+                Conveyor.cmd.remove(0);
+                return;
             }
         }
+
         Conveyor.cmd.remove(0);
-        Answer answ = new Answer(command_condition.finished,"");
+        Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
         Conveyor.answer.add(answ);
     }
     private int getLevenshteinDistance(String lhs, String rhs){

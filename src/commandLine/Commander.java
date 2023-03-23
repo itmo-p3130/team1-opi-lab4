@@ -41,10 +41,9 @@ public class Commander extends Thread {
             if(levDist<min_levDist){
                 lvt_commands.clear();
                 lvt_commands.add(command_exmp);
-                min_levDist=Math.min(levDist,min_levDist);
+                min_levDist=levDist;
             } else if(levDist==min_levDist) {
                 lvt_commands.add(command_exmp);
-                min_levDist=Math.min(levDist,min_levDist);
             }
             if(levDist==0){
                 switch (command_exmp){
@@ -94,6 +93,7 @@ public class Commander extends Thread {
                 current_command.execute();
                 Conveyor.cmdready.remove(0);
             }
+            try{Thread.sleep(1);}catch (InterruptedException ex){System.out.println(ex);}
         }
     }
     private void addCommandToQueue(command com){

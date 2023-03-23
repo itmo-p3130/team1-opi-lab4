@@ -1,4 +1,5 @@
 package consoleParser;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,8 +20,18 @@ public class Parser extends Thread {
         Scanner scan = new Scanner(System.in);
         while(processing_semaphore.isAlive()){
             if(Conveyor.answer.size()>0) {
+
                 Answer answ = Conveyor.answer.get(0);
-                System.out.print(answ.answer);
+                switch (answ.condition){
+                    case finished -> System.out.print(answ.answer);
+                    case waiting_for_input -> {
+                        System.out.print(answ.answer);
+                        String cdata = scan.nextLine();
+                        sendToCommander(cdata);
+                    }
+                    case working ->{;}
+                }
+
                 Conveyor.answer.remove(0);
             } else {
                 System.out.print("\n>>>");

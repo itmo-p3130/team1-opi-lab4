@@ -2,9 +2,14 @@ package commandLine;
 
 import dataStruct.Answer;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class Conveyor {
+    //static final List cmd = Collections.synchronizedList(new ArrayList<String>());
     static final ArrayList<String> comm = new ArrayList<String>();
     static final ArrayList<Answer> answ = new ArrayList<Answer>();
     static final ArrayList<command> commandsReady = new ArrayList<command>();

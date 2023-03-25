@@ -1,6 +1,6 @@
 package dataStruct;
 
-public enum condition {
+public enum command_condition {
     finished,
     started_new_command,
     working,

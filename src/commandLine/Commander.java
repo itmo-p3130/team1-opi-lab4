@@ -1,22 +1,26 @@
 package commandLine;
-import commandLine.Commands;
 import dataStruct.Answer;
-import dataStruct.condition;
+import dataStruct.command_condition;
 
-public class Commander extends Thread implements conveyor{
+import java.util.ArrayList;
+import java.util.concurrent.locks.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class Commander extends Thread {
     private final String name;
+    private Object conditor;
     public Thread processing_semaphore;
-    public Commander(String name, Thread semaphore){
+
+    public Commander(String name, Thread semaphore, Object cond){
         this.name = name;
         this.processing_semaphore=semaphore;
-    }
-    public void printAll(){
-        for(String s:comm){
-            System.out.print(s);
-        }
+        this.conditor = cond;
+        this.setName(this.name);
     }
     private void nextCommand(){
-        String command_raw = conveyor.comm.get(0).strip();
+        String command_raw = Conveyor.cmd.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
         String command_args;
@@ -25,19 +29,36 @@ public class Commander extends Thread implements conveyor{
         }else{
             command_args="";
         }
-
+        if(command_base.length()==0){
+            Conveyor.cmd.remove(0);
+            Answer answ = new Answer(command_condition.finished,"");
+            Conveyor.answer.add(answ);
+            return;
+        }
+        ArrayList<allCommands> lvt_commands= new ArrayList<allCommands>();
+        int min_levDist = 10096;
         for(allCommands command_exmp : allCommands.values()){
-            if(getLevenshteinDistance(command_exmp.name(), command_base)==0){
+            int levDist = getLevenshteinDistance(command_exmp.name(), command_base);
+            if(levDist<min_levDist){
+                lvt_commands.clear();
+                lvt_commands.add(command_exmp);
+                min_levDist=levDist;
+            } else if(levDist==min_levDist) {
+                lvt_commands.add(command_exmp);
+            }
+            if(levDist==0){
                 switch (command_exmp){
                     case help -> addCommandToQueue(new Commands.command_help());
 
                 }
-                break;
+                Conveyor.cmd.remove(0);
+                return;
             }
         }
-        conveyor.comm.remove(0);
-        Answer answ = new Answer(condition.finished,"");
-        conveyor.answ.add(answ);
+
+        Conveyor.cmd.remove(0);
+        Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
+        Conveyor.answer.add(answ);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;
@@ -64,29 +85,29 @@ public class Commander extends Thread implements conveyor{
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
-            if(!conveyor.comm.isEmpty()){
-                System.out.println("Commands:"+conveyor.comm.size());
+            synchronized (conditor){
+                try{
+                    if(Conveyor.cmd.size() == 0 | Conveyor.cmdready.size() == 0){
+                        conditor.wait();
+                    }
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
+            if(!(Conveyor.cmd.size() == 0)){
                 nextCommand();
-                System.out.println("CommandsR:"+conveyor.commands_ready.size());
-                System.out.println("Answers:"+conveyor.answ.size());
-
-//                while (true) {
-//                    System.out.println("Commander: " + conveyor.answ.size());
-//                }
             }
 
-            if(!conveyor.commands_ready.isEmpty()){
-                command current_command = conveyor.commands_ready.get(0);
+            if(!(Conveyor.cmdready.size() == 0)){
+                command current_command = Conveyor.cmdready.get(0);
                 current_command.execute();
-                conveyor.commands_ready.remove(0);
+                Conveyor.cmdready.remove(0);
             }
         }
     }
     private void addCommandToQueue(command com){
-        conveyor.commands_ready.add(com);
+        Conveyor.cmdready.add(com);
     }
-    private void executeNextCommand(){
 
-    }
 
 }

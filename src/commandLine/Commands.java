@@ -1,15 +1,15 @@
 package commandLine;
 import commandLine.command;
 import dataStruct.Answer;
-import dataStruct.condition;
+import dataStruct.command_condition;
 
-public class Commands implements conveyor {
+public class Commands {
     Commands(){}
     public static class command_help implements command{
         command_help(){}
         public void execute(){
-            Answer answ = new Answer(condition.finished,"Info-stroke");
-            conveyor.answ.add(answ);
+            Answer answ = new Answer(command_condition.finished,"Info-stroke");
+            Conveyor.answer.add(answ);
         };
         public void repeat(){};
         public void set_next_command(command com){};

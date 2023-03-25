@@ -5,13 +5,11 @@ public class Main {
     //863205
     public static void main(String[] args) {
 
-
-        Parser prs = new Parser("Main parser thread",Thread.currentThread());
-        Commander com = new Commander("Main commander thread",Thread.currentThread());
+        Object condition = new Object();
+        Parser prs = new Parser("Main parser thread",Thread.currentThread(), condition);
+        Commander com = new Commander("Main commander thread",Thread.currentThread(),condition);
         com.start();
         prs.start();
-
-        while(prs.isAlive() && com.isAlive()) { }
 
         try {
             prs.join();

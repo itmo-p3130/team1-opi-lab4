@@ -3,6 +3,7 @@ import dataStruct.Answer;
 import dataStruct.command_condition;
 
 import java.util.ArrayList;
+import java.util.concurrent.locks.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -10,10 +11,14 @@ import java.util.Map;
 public class Commander extends Thread {
     private final String name;
     //private CondtitionThread condition;
+    private Object conditor;
     public Thread processing_semaphore;
-    public Commander(String name, Thread semaphore){
+
+    public Commander(String name, Thread semaphore, Object cond){
         this.name = name;
         this.processing_semaphore=semaphore;
+        this.conditor = cond;
+        this.setName(this.name);
         //this.condition = new CondtitionThread();
     }
     public void printAll(){
@@ -84,6 +89,15 @@ public class Commander extends Thread {
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
+            synchronized (conditor){
+                try{
+                    if(Conveyor.cmd.size() == 0 | Conveyor.cmdready.size() == 0){
+                        conditor.wait();
+                    }
+                }catch (InterruptedException e){
+                    e.printStackTrace();
+                }
+            }
             if(!(Conveyor.cmd.size() == 0)){
                 nextCommand();
             }
@@ -98,6 +112,7 @@ public class Commander extends Thread {
     }
     private void addCommandToQueue(command com){
         Conveyor.cmdready.add(com);
-        System.out.println("Added new command");
     }
+
+
 }

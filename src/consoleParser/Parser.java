@@ -1,4 +1,5 @@
 package consoleParser;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
@@ -8,11 +9,14 @@ import commandLine.Conveyor;
 import dataStruct.Answer;
 public class Parser extends Thread {
     private final String name;
+    private Object conditor;
     public Thread processing_semaphore;
-    public Parser(String name, Thread semaphore){
+    public Parser(String name, Thread semaphore, Object cond){
     /*Start logging -> Main parser thread activation*/
         this.name = name;
         this.processing_semaphore = semaphore;
+        this.conditor = cond;
+        this.setName(this.name);
     }
     @Override
     public void run(){
@@ -20,25 +24,19 @@ public class Parser extends Thread {
         Scanner scan = new Scanner(System.in);
         while(processing_semaphore.isAlive()){
             if(Conveyor.answer.size()>0) {
-
-                Answer answ = Conveyor.answer.get(0);
-                switch (answ.condition){
-                    case finished -> System.out.print(answ.answer);
-                    case waiting_for_input -> {
-                        System.out.print(answ.answer);
-                        String cdata = scan.nextLine();
-                        sendToCommander(cdata);
-                    }
-                    case working ->{;}
+                for(int i = 0; i< Conveyor.answer.size(); i++){
+                    Answer answ = Conveyor.answer.get(0);
+                    System.out.print(answ.answer);
+                    Conveyor.answer.remove(0);
                 }
-
-                Conveyor.answer.remove(0);
             } else {
-                System.out.print("\n>>>");
+                System.out.print("\n\u001b[34m>>>\u001b[0m");
                 String cdata = scan.nextLine();
                 sendToCommander(cdata);
+                synchronized (conditor){
+                    conditor.notifyAll();
+                }
                 waitForAnswer();
-                System.out.println("answ:" + Conveyor.answer.size() + " comm:" + Conveyor.cmd.size() + " comready:" + Conveyor.cmdready.size());
             }
         }
     }

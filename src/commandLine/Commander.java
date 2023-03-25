@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class Commander extends Thread {
     private final String name;
-    //private CondtitionThread condition;
     private Object conditor;
     public Thread processing_semaphore;
 
@@ -19,9 +18,6 @@ public class Commander extends Thread {
         this.processing_semaphore=semaphore;
         this.conditor = cond;
         this.setName(this.name);
-        //this.condition = new CondtitionThread();
-    }
-    public void printAll(){
     }
     private void nextCommand(){
         String command_raw = Conveyor.cmd.get(0).strip();
@@ -107,7 +103,6 @@ public class Commander extends Thread {
                 current_command.execute();
                 Conveyor.cmdready.remove(0);
             }
-            try{Thread.sleep(1);}catch (InterruptedException ex){System.out.println(ex);}
         }
     }
     private void addCommandToQueue(command com){

@@ -1,18 +1,17 @@
 package commandLine;
 
 import dataStruct.Answer;
+import dataStruct.Person;
 
 import javax.swing.text.html.HTMLDocument;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Conveyor {
-    //static final List cmd = Collections.synchronizedList(new ArrayList<String>());
     static final ArrayList<String> comm = new ArrayList<String>();
     static final ArrayList<Answer> answ = new ArrayList<Answer>();
     static final ArrayList<command> commandsReady = new ArrayList<command>();
+
+    HashSet<Person> data = new HashSet<Person>();
 
     public class cmd {
         public synchronized static String get(int index) {
@@ -21,6 +20,10 @@ public class Conveyor {
 
         public synchronized static void add(String value) {
             comm.add(value);
+        }
+
+        public synchronized static void addLeft(String value) {
+            comm.add(0, value);
         }
 
         public synchronized static int size() {

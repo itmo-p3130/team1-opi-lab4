@@ -1,12 +1,10 @@
 package commandLine;
 import dataStruct.Answer;
+import dataStruct.Person;
 import dataStruct.command_condition;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.concurrent.locks.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Commander extends Thread {
     private final String name;
@@ -23,11 +21,13 @@ public class Commander extends Thread {
         String command_raw = Conveyor.cmd.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
-        String command_args;
-        if(command_splited.length>=2){
-            command_args = command_splited[1];
-        }else{
-            command_args="";
+        String[] command_args = new String[128];
+        if(command_splited.length >= 2) {
+            for(int i = 1; i != command_splited.length; i++) {
+                command_args[i - 1] = command_splited[i];
+            }
+        } else {
+            command_args[0] = "";
         }
         if(command_base.length()==0){
             Conveyor.cmd.remove(0);
@@ -49,7 +49,9 @@ public class Commander extends Thread {
             if(levDist==0){
                 switch (command_exmp){
                     case help -> addCommandToQueue(new Commands.command_help());
-
+                    case queue -> addCommandToQueue(new Commands.command_queue());
+                    case skip -> addCommandToQueue(new Commands.command_skip());
+                    case add -> addCommandToQueue(new Commands.command_add());
                 }
                 Conveyor.cmd.remove(0);
                 return;
@@ -59,6 +61,38 @@ public class Commander extends Thread {
         Conveyor.cmd.remove(0);
         Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
         Conveyor.answer.add(answ);
+    }
+    @Override
+    public void run(){
+        while (processing_semaphore.isAlive()){
+            if(Conveyor.cmd.size() == 0 & Conveyor.cmdready.size() == 0){
+                synchronized (conditor){
+                    try{
+                        conditor.wait();
+                    }catch (InterruptedException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if(!(Conveyor.cmd.size() == 0)){
+                nextCommand();
+            }
+
+            if(!(Conveyor.cmdready.size() == 0)){
+                command current_command = Conveyor.cmdready.get(0);
+                try {
+                    current_command.execute();
+                }catch (InterruptedException e){
+                    System.out.println(e);
+                }finally {
+                    current_command.set_next_command(null);
+                }
+                Conveyor.cmdready.remove(0);
+            }
+        }
+    }
+    private void addCommandToQueue(command com){
+        Conveyor.cmdready.add(com);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;
@@ -82,32 +116,5 @@ public class Commander extends Thread {
         }
         return cost[len0 - 1];
     }
-    @Override
-    public void run(){
-        while (processing_semaphore.isAlive()){
-            synchronized (conditor){
-                try{
-                    if(Conveyor.cmd.size() == 0 | Conveyor.cmdready.size() == 0){
-                        conditor.wait();
-                    }
-                }catch (InterruptedException e){
-                    e.printStackTrace();
-                }
-            }
-            if(!(Conveyor.cmd.size() == 0)){
-                nextCommand();
-            }
-
-            if(!(Conveyor.cmdready.size() == 0)){
-                command current_command = Conveyor.cmdready.get(0);
-                current_command.execute();
-                Conveyor.cmdready.remove(0);
-            }
-        }
-    }
-    private void addCommandToQueue(command com){
-        Conveyor.cmdready.add(com);
-    }
-
 
 }

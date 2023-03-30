@@ -7,7 +7,7 @@ public class Commands {
     Commands(){}
     public static class command_help implements command{
         command_help(){}
-        public void execute(){
+        public void execute() throws InterruptedException {
             Answer answ = new Answer(command_condition.finished,"Info-stroke");
             Conveyor.answer.add(answ);
         };
@@ -16,7 +16,7 @@ public class Commands {
     }
     public static class command_info implements command{
         command_info(){}
-        public void execute(){};
+        public void execute() throws InterruptedException {};
         public void repeat(){};
         public void set_next_command(command com){};
     }
@@ -28,9 +28,18 @@ public class Commands {
     }
     public static class command_add implements command{
         command_add(){}
-        public void execute(){};
+        public void execute() throws InterruptedException {
+            Conveyor.answer.add(new Answer(command_condition.working, ""));
+        };
         public void repeat(){};
-        public void set_next_command(command com){};
+        public void set_next_command(command com){
+            Conveyor.cmdready.add(new Commands.command_help());
+            Conveyor.cmdready.add(new Commands.command_help());
+            Conveyor.cmdready.add(new Commands.command_help());
+            Conveyor.cmdready.add(new Commands.command_help());
+            Conveyor.cmdready.add(new Commands.command_help());
+            Conveyor.answer.add(new Answer(command_condition.ended, ""));
+        };
     }
     public static class command_update implements command{
         command_update(){}
@@ -106,13 +115,22 @@ public class Commands {
     }
     public static class command_skip implements command{
         command_skip(){}
-        public void execute(){};
+        public void execute(){Conveyor.answer.add(new Answer(command_condition.finished,"I'm too lazy to realize it, you'll only have to wait :З"));};
         public void repeat(){};
         public void set_next_command(command com){};
     }
     public static class command_queue implements command{
         command_queue(){}
-        public void execute(){};
+        public void execute(){
+            String queue = "";
+            for(int i = 0; i!=Conveyor.cmdready.size();i++){
+                queue+=Conveyor.cmdready.get(i).toString()+";";
+                if((queue.lastIndexOf("\n") == -1 | queue.length() > 32) || (queue.length() - queue.lastIndexOf("\n") > 32)) {
+                    queue+="\n";
+                }
+            }
+            Conveyor.answer.add(new Answer(command_condition.finished,"Current queue: "+queue));
+        };
         public void repeat(){};
         public void set_next_command(command com){};
     }

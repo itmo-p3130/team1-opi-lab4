@@ -18,7 +18,7 @@ public class Commander extends Thread {
         this.setName(this.name);
     }
     private void nextCommand(){
-        String command_raw = Conveyor.cmd.get(0).strip();
+        String command_raw = Conveyor.comm.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
         String[] command_args = new String[128];
@@ -30,7 +30,7 @@ public class Commander extends Thread {
             command_args[0] = "";
         }
         if(command_base.length()==0){
-            Conveyor.cmd.remove(0);
+            Conveyor.comm.remove(0);
             Answer answ = new Answer(command_condition.finished,"");
             Conveyor.answer.add(answ);
             return;
@@ -53,19 +53,19 @@ public class Commander extends Thread {
                     case skip -> addCommandToQueue(new Commands.command_skip());
                     case add -> addCommandToQueue(new Commands.command_add());
                 }
-                Conveyor.cmd.remove(0);
+                Conveyor.comm.remove(0);
                 return;
             }
         }
 
-        Conveyor.cmd.remove(0);
+        Conveyor.comm.remove(0);
         Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
         Conveyor.answer.add(answ);
     }
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
-            if(Conveyor.cmd.size() == 0 & Conveyor.cmdready.size() == 0){
+            if(Conveyor.comm.size() == 0 & Conveyor.cmdready.size() == 0){
                 synchronized (conditor){
                     try{
                         conditor.wait();
@@ -74,7 +74,7 @@ public class Commander extends Thread {
                     }
                 }
             }
-            if(!(Conveyor.cmd.size() == 0)){
+            if(!(Conveyor.comm.size() == 0)){
                 nextCommand();
             }
 
@@ -87,6 +87,9 @@ public class Commander extends Thread {
                 }finally {
                     current_command.set_next_command(null);
                 }
+//                synchronized (conditor){
+//                    conditor.notifyAll();
+//                }System.out.println("Commander notify all (acr): "+Conveyor.answer.size()+" "+Conveyor.comm.size()+" "+Conveyor.cmdready.size());
                 Conveyor.cmdready.remove(0);
             }
         }

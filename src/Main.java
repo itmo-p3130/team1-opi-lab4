@@ -6,8 +6,8 @@ public class Main {
     public static void main(String[] args) {
 
         Object condition = new Object();
-        Parser prs = new Parser("Main parser thread",Thread.currentThread(), condition);
-        Commander com = new Commander("Main commander thread",Thread.currentThread(),condition);
+        Parser prs = new Parser("Main Parser thread",Thread.currentThread(), condition);
+        Commander com = new Commander("Main Commander thread",Thread.currentThread(),condition);
         com.start();
         prs.start();
 

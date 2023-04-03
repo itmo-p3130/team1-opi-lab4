@@ -6,5 +6,6 @@ public enum command_condition {
     working,
     waiting_for_input,
     critical_error,
-    non_critical_error
+    non_critical_error,
+    ended
 }

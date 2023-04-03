@@ -1,7 +1,8 @@
+package com.alexnalobin.app;
 import commandLine.Commander;
 import consoleParser.Parser;
 
-public class Main {
+public class App {
     //863205
     public static void main(String[] args) {
 

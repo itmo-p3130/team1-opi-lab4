@@ -1,4 +1,4 @@
-package dataStruct;
+package com.alexnalobin.app.dataStruct;
 
 public enum Color {
     ORANGE(0),

@@ -1,7 +1,7 @@
-package commandLine;
-import commandLine.command;
-import dataStruct.Answer;
-import dataStruct.command_condition;
+package com.alexnalobin.app.commandLine;
+import com.alexnalobin.app.commandLine.command;
+import com.alexnalobin.app.dataStruct.Answer;
+import com.alexnalobin.app.dataStruct.command_condition;
 
 public class Commands {
     Commands(){}

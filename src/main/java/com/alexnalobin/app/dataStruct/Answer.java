@@ -1,4 +1,4 @@
-package dataStruct;
+package com.alexnalobin.app.dataStruct;
 
 public class Answer {
     public command_condition condition;

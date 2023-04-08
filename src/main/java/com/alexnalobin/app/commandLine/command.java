@@ -1,4 +1,4 @@
-package commandLine;
+package com.alexnalobin.app.commandLine;
 
 public interface command {
     void execute() throws InterruptedException;

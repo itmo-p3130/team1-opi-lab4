@@ -1,4 +1,4 @@
-package dataStruct;
+package com.alexnalobin.app.dataStruct;
 
 public class Location {
     private Integer x; //Поле не может быть null

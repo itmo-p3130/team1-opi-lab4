@@ -1,7 +1,7 @@
-package commandLine;
-import dataStruct.Answer;
-import dataStruct.Person;
-import dataStruct.command_condition;
+package com.alexnalobin.app.commandLine;
+import com.alexnalobin.app.dataStruct.Answer;
+import com.alexnalobin.app.dataStruct.Person;
+import com.alexnalobin.app.dataStruct.command_condition;
 
 import java.util.*;
 import java.util.concurrent.locks.*;

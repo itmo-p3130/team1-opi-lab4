@@ -1,10 +1,10 @@
-package commandLine;
+package com.alexnalobin.app.commandLine;
 
-import dataStruct.Answer;
-import dataStruct.Person;
+import com.alexnalobin.app.dataStruct.Answer;
+import com.alexnalobin.app.dataStruct.Person;
 
+import java.util.HashSet;
 import java.util.Vector;
-import java.util.*;
 
 public class Conveyor {
     static public final Vector<String> comm = new Vector<String>();

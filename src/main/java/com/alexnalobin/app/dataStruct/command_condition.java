@@ -1,4 +1,4 @@
-package dataStruct;
+package com.alexnalobin.app.dataStruct;
 
 public enum command_condition {
     finished,

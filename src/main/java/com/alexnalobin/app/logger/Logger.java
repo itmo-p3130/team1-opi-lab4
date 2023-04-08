@@ -1,4 +1,4 @@
-package logger;
+package com.alexnalobin.app.logger;
 
 public class Logger {
 }

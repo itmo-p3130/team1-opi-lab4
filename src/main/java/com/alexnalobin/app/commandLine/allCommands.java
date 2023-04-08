@@ -1,4 +1,4 @@
-package commandLine;
+package com.alexnalobin.app.commandLine;
 
 enum allCommands{
     help,

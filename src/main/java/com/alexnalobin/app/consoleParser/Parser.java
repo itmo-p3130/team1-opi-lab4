@@ -1,13 +1,21 @@
-package consoleParser;
+package com.alexnalobin.app.consoleParser;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import commandLine.Conveyor;
-import dataStruct.Answer;
-import dataStruct.command_condition;
+import com.alexnalobin.app.commandLine.Conveyor;
+import com.alexnalobin.app.dataStruct.Answer;
+import com.alexnalobin.app.dataStruct.command_condition;
+
+import jakarta.websocket.CloseReason;
+import jakarta.websocket.OnClose;
+import jakarta.websocket.OnMessage;
+import jakarta.websocket.OnOpen;
+import jakarta.websocket.Session;
+import jakarta.websocket.server.ServerEndpoint;
+
 
 public class Parser extends Thread {
     private final String name;
@@ -20,6 +28,7 @@ public class Parser extends Thread {
         this.conditor = cond;
         this.setName(this.name);
     }
+
     @Override
     public void run(){
         System.out.println("\u001B[32mStarted at "+ (new SimpleDateFormat("HH:mm:ss dd/MM/yyyy").format(new Date()))+ " @ Made by Alex P3130 2022/2023\u001B[0m");

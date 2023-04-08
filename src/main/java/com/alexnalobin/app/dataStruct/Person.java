@@ -1,4 +1,4 @@
-package dataStruct;
+package com.alexnalobin.app.dataStruct;
 
 public class Person {
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически

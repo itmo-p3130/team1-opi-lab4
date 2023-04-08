@@ -1,6 +1,6 @@
 package com.alexnalobin.app;
-import commandLine.Commander;
-import consoleParser.Parser;
+import com.alexnalobin.app.commandLine.Commander;
+import com.alexnalobin.app.consoleParser.Parser;
 
 public class App {
     //863205

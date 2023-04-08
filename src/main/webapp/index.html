@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--Made by Alexandr =SSS_Krut= Nalobin in 2023 using ChatGPT3-->
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Console</title>
+  <style>
+    body {
+      background-color: #1d1d1d;
+      color: white;
+      font-family: monospace;
+      font-size: 16px;
+    }
+    #output {
+      height: 80vh;
+      overflow-y: scroll;
+      padding: 10px;
+      border-bottom: 1px solid white;
+      scroll-behavior: smooth;
+      max-width: 100%;
+      word-wrap: break-word;
+    }
+    #output::-webkit-scrollbar {
+      width: 10px;
+    }
+    #output::-webkit-scrollbar-track {
+      background: #2b2b2b;
+    }
+    #output::-webkit-scrollbar-thumb {
+      background-color: #4f4f4f;
+      border-radius: 20px;
+    }
+    #output p {
+      background-color: #2b2b2b;
+    }
+    #input {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-top: 1px solid white;
+    }
+    #input input[type="text"] {
+      flex-grow: 1;
+      margin-right: 10px;
+      background-color: #2b2b2b;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-size: 16px;
+    }
+    #input button {
+      background-color: #4f4f4f;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="output"></div>
+  <div id="input">
+    <input type="text" placeholder="Type here...">
+    <button id="send">Send</button>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+    const input = document.querySelector('#input input[type="text"]');
+    const sendButton = document.getElementById('send');
+    let ws;
+
+    // function to add a new message to the console
+    function addMessage(message) {
+      const p = document.createElement('p');
+      console.log(colorText(message));
+      p.setAttribute("style", colorText(message));
+      p.textContent = RegAndRep(/\\u001[Bb]\[(\d{1,2})(?:;(\d{1,2})(?:;(\d{1,2})){0,1})?m/g,message,"");
+      output.appendChild(p);
+    }
+
+    // event listener for when the form is submitted
+    function handleSubmit(event) {
+      event.preventDefault();
+      const message = input.value;
+      addMessage(message);
+      input.value = '';
+      output.scrollTop = output.scrollHeight; // scroll to bottom of output
+      ws.send(message); // send message through WebSocket
+    }
+
+    // event listener for when the Enter key is pressed
+    function handleKeyPress(event) {
+      if (event.keyCode === 13) {
+        handleSubmit(event);
+      }
+    }
+
+    function RegAndRep(reg,tex,rep){
+      const regex = reg; const text = tex; const replace = rep;
+      return text.replace(regex,replace);
+    }
+
+    function colorText(text) {
+        const colorRegex = /\\u001[Bb]\[(\d{1,2})(?:;(\d{1,2})(?:;(\d{1,2})){0,1})?m/g;
+         let result = "";
+      let lastIndex = 0;
+
+      while (true) {
+        const match = colorRegex.exec(text);
+
+        if (!match) {
+          break;
+        }
+
+        const colorCode = match[1];
+        const bgColorCode = match[2];
+        const styleCodes = match[3] ? match[3].split(';') : [];
+        const colorStyle = getColorStyle(colorCode);
+        const bgColorStyle = getColorStyle(bgColorCode);
+        const styleStyles = getColorStyle(styleCodes);
+
+        result += colorStyle+bgColorStyle+styleStyles+";";
+
+        lastIndex = colorRegex.lastIndex;
+      }
+
+      //result += text.substring(lastIndex);
+      return result;
+    }
+
+      function getColorStyle(colorCode) {
+        const colors = {
+          "30": "color: black;",
+          "31": "color: red;",
+          "32": "color: green;",
+          "33": "color: yellow;",
+          "34": "color: blue;",
+          "35": "color: magenta;",
+          "36": "color: cyan;",
+          "37": "color: white;",
+          "90": "color: gray;",
+          "40": "background-color: black;",
+          "41": "background-color: red;",
+          "42": "background-color: green;",
+          "43": "background-color: yellow;",
+          "44": "background-color: blue;",
+          "45": "background-color: magenta;",
+          "46": "background-color: cyan;",
+          "47": "background-color: white;",
+          "1": "font-weight: bold;",
+          "3": "font-style: italic;",
+          "4": "text-decoration: underline;",
+          "5": "text-decoration: blink;",
+          "7": "background-color: white; color: black;",
+          "9": "text-decoration: line-through;",
+        };
+        if (colors[colorCode]!==undefined){
+        return colors[colorCode];}
+        else{return"";}
+      }
+
+  
+    // add event listeners to the input and send button
+    input.addEventListener('keypress', handleKeyPress);
+    sendButton.addEventListener('click', handleSubmit);
+    
+    // function to get data from the server and add it to the console
+    function fetchData() {
+      fetch('/api/data')
+        .then(response => response.text())
+        .then(data => {
+          addMessage(data);
+          output.scrollTop = output.scrollHeight; // scroll to bottom of output
+        })
+        .catch(error => console.error(error));
+    }
+
+    // create WebSocket connection
+    var wsProtocol = window.location.protocol == "https:" ? "wss" : "ws";
+    var wsURI = wsProtocol + '://' + window.location.host + window.location.pathname + 'websocket/console';
+    ws = new WebSocket(wsURI);
+    ws.onopen = (event) => {
+      console.log('WebSocket connection established.');
+      addMessage("\\u001B[4;32;1mConnection via websocket established. "+event.data);
+    };
+    ws.onmessage = (event) => {
+      addMessage(event.data);
+      output.scrollTop = output.scrollHeight; // scroll to bottom of output
+    };
+    ws.onclose = (event) => {
+      addMessage("\\u001B[4;31m");
+    }
+
+    // call fetchData every 5 seconds
+    //setInterval(fetchData, 5000);
+  </script>
+</body>
+</html>

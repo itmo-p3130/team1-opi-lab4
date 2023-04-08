@@ -9,12 +9,6 @@ import com.alexnalobin.app.commandLine.Conveyor;
 import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.command_condition;
 
-import jakarta.websocket.CloseReason;
-import jakarta.websocket.OnClose;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
-import jakarta.websocket.server.ServerEndpoint;
 
 
 public class Parser extends Thread {

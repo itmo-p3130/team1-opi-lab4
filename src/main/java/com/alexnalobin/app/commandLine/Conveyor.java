@@ -7,11 +7,12 @@ import java.util.HashSet;
 import java.util.Vector;
 
 public class Conveyor {
-    static public final Vector<String> comm = new Vector<String>();
-    static public final Vector<Answer> answer = new Vector<Answer>();
-    static public final Vector<command> cmdready = new Vector<command>();
+    public final Vector<String> comm = new Vector<String>();
+    public final Vector<Answer> answer = new Vector<Answer>();
+    public final Vector<command> cmdready = new Vector<command>();
 
     HashSet<Person> data = new HashSet<Person>();
+
 }
 //    public class cmd {
 //        public synchronized static String get(int index) {

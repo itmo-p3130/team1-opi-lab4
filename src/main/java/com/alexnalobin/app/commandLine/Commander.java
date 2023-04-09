@@ -10,15 +10,18 @@ public class Commander extends Thread {
     private final String name;
     private Object conditor;
     public Thread processing_semaphore;
-
-    public Commander(String name, Thread semaphore, Object cond){
+    public Commands commands;
+    public Conveyor conveyor;
+    public Commander(String name, Thread semaphore, Object cond, Conveyor conv){
         this.name = name;
         this.processing_semaphore=semaphore;
         this.conditor = cond;
         this.setName(this.name);
+        this.conveyor = conv;
+        this.commands = new Commands(conv);
     }
     private void nextCommand(){
-        String command_raw = Conveyor.comm.get(0).strip();
+        String command_raw = conveyor.comm.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
         String[] command_args = new String[128];
@@ -30,9 +33,9 @@ public class Commander extends Thread {
             command_args[0] = "";
         }
         if(command_base.length()==0){
-            Conveyor.comm.remove(0);
+            conveyor.comm.remove(0);
             Answer answ = new Answer(command_condition.finished,"");
-            Conveyor.answer.add(answ);
+            conveyor.answer.add(answ);
             return;
         }
         ArrayList<allCommands> lvt_commands= new ArrayList<allCommands>();
@@ -48,24 +51,24 @@ public class Commander extends Thread {
             }
             if(levDist==0){
                 switch (command_exmp){
-                    case help -> addCommandToQueue(new Commands.command_help());
-                    case queue -> addCommandToQueue(new Commands.command_queue());
-                    case skip -> addCommandToQueue(new Commands.command_skip());
-                    case add -> addCommandToQueue(new Commands.command_add());
+                    case help -> addCommandToQueue(commands.new command_help());
+                    case queue -> addCommandToQueue(commands.new command_queue());
+                    case skip -> addCommandToQueue(commands.new command_skip());
+                    case add -> addCommandToQueue(commands.new command_add());
                 }
-                Conveyor.comm.remove(0);
+                conveyor.comm.remove(0);
                 return;
             }
         }
 
-        Conveyor.comm.remove(0);
+        conveyor.comm.remove(0);
         Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
-        Conveyor.answer.add(answ);
+        conveyor.answer.add(answ);
     }
     @Override
     public void run(){
         while (processing_semaphore.isAlive()){
-            if(Conveyor.comm.size() == 0 & Conveyor.cmdready.size() == 0){
+            if(conveyor.comm.size() == 0 & conveyor.cmdready.size() == 0){
                 synchronized (conditor){
                     try{
                         conditor.wait();
@@ -74,28 +77,28 @@ public class Commander extends Thread {
                     }
                 }
             }
-            if(!(Conveyor.comm.size() == 0)){
+            if(!(conveyor.comm.size() == 0)){
                 nextCommand();
             }
 
-            if(!(Conveyor.cmdready.size() == 0)){
-                command current_command = Conveyor.cmdready.get(0);
+            if(!(conveyor.cmdready.size() == 0)){
+                command current_command = conveyor.cmdready.get(0);
                 try {
                     current_command.execute();
                 }catch (InterruptedException e){
-                    System.out.println(e);
+                    System.err.println(e);
                 }finally {
                     current_command.set_next_command(null);
                 }
 //                synchronized (conditor){
 //                    conditor.notifyAll();
-//                }System.out.println("Commander notify all (acr): "+Conveyor.answer.size()+" "+Conveyor.comm.size()+" "+Conveyor.cmdready.size());
-                Conveyor.cmdready.remove(0);
+//                }System.out.println("Commander notify all (acr): "+conveyor.answer.size()+" "+conveyor.comm.size()+" "+conveyor.cmdready.size());
+                conveyor.cmdready.remove(0);
             }
         }
     }
     private void addCommandToQueue(command com){
-        Conveyor.cmdready.add(com);
+        conveyor.cmdready.add(com);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;

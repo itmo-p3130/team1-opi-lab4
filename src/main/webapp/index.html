@@ -183,7 +183,8 @@
     ws = new WebSocket(wsURI);
     ws.onopen = (event) => {
       console.log('WebSocket connection established.');
-      addMessage("\\u001B[4;32;1mConnection via websocket established. "+event.data);
+      addMessage("\\u001B[4;32;1mConnection via websocket established. "+event);
+      console.log(event.log)
     };
     ws.onmessage = (event) => {
       addMessage(event.data);

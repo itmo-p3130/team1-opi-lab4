@@ -10,30 +10,36 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
 import com.alexnalobin.app.commandLine.*;
+import com.alexnalobin.app.App;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/websocket/console")
 public class webConsole {
-    public Map<String, Session> allSessions = new HashMap<String,Session>();
+    public static Map<Session, App> allSessions = new ConcurrentHashMap<Session, App>();
     @OnMessage
-    public String sayHello(String name,Session session) {
-        if (name.length() == 0) {
-            return ("");
+    public void message(String name,Session session) {
+        name = name.replaceFirst("^[ \t]+", "");
+        if (name.length() != 0) {        
+            System.out.println("New data from client "+session.getId().substring(0,6)+" : '" + name + "'");
+            allSessions.get(session).core_addCommand(name);
         }
-        System.out.println("New data from client "+session.getId().substring(0,6)+" : '" + name + "'");
-        Conveyor.comm.add(name);
-        return ("Hello " + name + " from websocket endpoint");
     }
 
     @OnOpen
-    public void helloOnOpen(Session session) throws IOException {
-        session.getBasicRemote().sendText("Server-Client sessionID: " + session.getId());
+    public void hello(Session session) throws IOException {
+        session.getBasicRemote().sendText("Server-Client sessionID: \n\n" + session.getId());
         System.out.println("WebSocket opened: " + session.getId());
+        App sessionCore = new App(null, session);
+        sessionCore.start();
+        allSessions.put(session, sessionCore);
     }
 
     @OnClose
-    public void goodbye(CloseReason reason) {
+    public void goodbye(Session session,CloseReason reason) {
         System.out.println("WebSocket connection closed with CloseCode: " + reason.getCloseCode());
+        allSessions.remove(session);
+        System.out.println("There is " + allSessions.size() + " more sessions");
     }
 }

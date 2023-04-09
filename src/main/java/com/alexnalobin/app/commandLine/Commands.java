@@ -8,11 +8,11 @@ public class Commands {
     Commands(Conveyor conv){
         this.conveyor = conv;
     }
-    
+
     public class command_help implements command{
         command_help(){}
         public void execute() throws InterruptedException {
-            Answer answ = new Answer(command_condition.finished,"Info-stroke");
+            Answer answ = new Answer(command_condition.finished,"\\u001b[31mInfo-stroke");
             conveyor.answer.add(answ);
         };
         public void repeat(){};

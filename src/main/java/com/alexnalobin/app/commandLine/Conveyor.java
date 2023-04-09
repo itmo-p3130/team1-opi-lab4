@@ -3,6 +3,8 @@ package com.alexnalobin.app.commandLine;
 import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.Person;
 
+import jakarta.websocket.Session;
+
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -12,6 +14,7 @@ public class Conveyor {
     public final Vector<command> cmdready = new Vector<command>();
 
     HashSet<Person> data = new HashSet<Person>();
+
 
 }
 //    public class cmd {

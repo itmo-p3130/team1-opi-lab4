@@ -22,7 +22,7 @@ public class App extends Thread{
         
         // Parser prs = new Parser("Main Parser thread of " +
         // session.getId(),Thread.currentThread(), condition);
-        Commander com = new Commander("Main Commander-Core thread of " + session.getId(), Thread.currentThread(), condition, conv);
+        Commander com = new Commander("Main Commander-Core thread of " + session.getId(), Thread.currentThread(), condition, conv, session);
         com.start();
         // prs.start();
 
@@ -36,15 +36,15 @@ public class App extends Thread{
     public void core_addCommand(String promt) {
         conv.comm.add(promt);
         synchronized (condition){
-        condition.notifyAll();
+            condition.notifyAll();
         }
 
-        try {
-            session.getBasicRemote().sendText(String.valueOf(conv.comm.size()));
-        } catch (Exception e) {
-            // TODO: handle exception
-            System.err.print(e);
-        }
+        // try {
+        //     session.getBasicRemote().sendText(String.valueOf(conv.comm.size()));
+        // } catch (Exception e) {
+        //     // TODO: handle exception
+        //     System.err.print(e);
+        // }
         
     }
 

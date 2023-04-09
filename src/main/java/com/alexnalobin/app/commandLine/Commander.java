@@ -3,6 +3,8 @@ import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.Person;
 import com.alexnalobin.app.dataStruct.command_condition;
 
+import jakarta.websocket.Session;
+
 import java.util.*;
 import java.util.concurrent.locks.*;
 
@@ -12,13 +14,15 @@ public class Commander extends Thread {
     public Thread processing_semaphore;
     public Commands commands;
     public Conveyor conveyor;
-    public Commander(String name, Thread semaphore, Object cond, Conveyor conv){
+    public Session session;
+    public Commander(String name, Thread semaphore, Object cond, Conveyor conv, Session session){
         this.name = name;
         this.processing_semaphore=semaphore;
         this.conditor = cond;
         this.setName(this.name);
         this.conveyor = conv;
         this.commands = new Commands(conv);
+        this.session = session;
     }
     private void nextCommand(){
         String command_raw = conveyor.comm.get(0).strip();
@@ -55,6 +59,7 @@ public class Commander extends Thread {
                     case queue -> addCommandToQueue(commands.new command_queue());
                     case skip -> addCommandToQueue(commands.new command_skip());
                     case add -> addCommandToQueue(commands.new command_add());
+                    case info -> addCommandToQueue(commands.new command_info());
                 }
                 conveyor.comm.remove(0);
                 return;
@@ -94,6 +99,15 @@ public class Commander extends Thread {
 //                    conditor.notifyAll();
 //                }System.out.println("Commander notify all (acr): "+conveyor.answer.size()+" "+conveyor.comm.size()+" "+conveyor.cmdready.size());
                 conveyor.cmdready.remove(0);
+            }
+            if(!(conveyor.answer.size() == 0)){
+                try {
+                    session.getBasicRemote().sendText(conveyor.answer.get(0).answer);
+                    conveyor.answer.remove(0);
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    System.err.print(e);
+                }
             }
         }
     }

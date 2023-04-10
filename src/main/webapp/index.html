@@ -183,7 +183,7 @@
     ws = new WebSocket(wsURI);
     ws.onopen = (event) => {
       console.log('WebSocket connection established.');
-      addMessage("\\u001B[4;32;1mConnection via websocket established. "+event);
+      addMessage("\\u001B[4;32;1mConnection via websocket established.");
       console.log(event.log)
     };
     ws.onmessage = (event) => {
@@ -191,7 +191,7 @@
       output.scrollTop = output.scrollHeight; // scroll to bottom of output
     };
     ws.onclose = (event) => {
-      addMessage("\\u001B[4;31m");
+      addMessage("\\u001B[4;31mConnection via websocket closed.");
     }
 
     // call fetchData every 5 seconds

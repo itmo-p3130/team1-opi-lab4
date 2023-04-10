@@ -16,7 +16,7 @@ public class Conveyor {
     public final Vector<ArrayList<String>> comm_buff = new Vector<ArrayList<String>>();
 
     HashSet<Person> data = new HashSet<Person>();
-    String path_to_collection = new String("./unknown-collection.csv");
+    String path_to_collection = new String("./unknown-collection.csv");// ./unknown-collection.csv
 
     String csv_core_author;
     String csv_date_initialization;

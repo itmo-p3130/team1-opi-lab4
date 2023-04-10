@@ -63,6 +63,7 @@ public class Commander extends Thread {
                     case add -> addCommandToQueue(commands.new command_add());
                     case info -> addCommandToQueue(commands.new command_info());
                     case argument -> addCommandToQueue(commands.new command_argument());
+                    case save -> addCommandToQueue(commands.new command_save());
                 }
                 conveyor.comm.remove(0);
                 conveyor.comm_buff.add(command_args);
@@ -96,8 +97,6 @@ public class Commander extends Thread {
                     current_command.execute();
                 }catch (InterruptedException e){
                     System.err.println(e);
-                }finally {
-                    current_command.set_next_command(null);
                 }
                 synchronized (answer_conditor) {
                     answer_conditor.notifyAll();

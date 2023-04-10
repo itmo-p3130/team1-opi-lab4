@@ -30,7 +30,7 @@ public class webConsole {
     @OnOpen
     public void hello(Session session) throws IOException {
         session.getBasicRemote().sendText("Server-Client sessionID: " + session.getId());
-        System.out.println("WebSocket opened: " + session.getId());
+        System.out.println("WebSocket opened: " + session.getId() + "; there is "+ (allSessions.size()+1) +" sessions now");
         App sessionCore = new App(null, session);
         sessionCore.start();
         allSessions.put(session, sessionCore);
@@ -40,6 +40,6 @@ public class webConsole {
     public void goodbye(Session session,CloseReason reason) {
         System.out.println("WebSocket connection closed with CloseCode: " + reason.getCloseCode());
         allSessions.remove(session);
-        System.out.println("There is " + allSessions.size() + " more sessions");
+        System.out.println("Session "+session.getId()+" closed; there is " + allSessions.size() + " more sessions");
     }
 }

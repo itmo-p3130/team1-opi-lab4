@@ -1,6 +1,8 @@
 package com.alexnalobin.app.dataStruct;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Person {
     private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
@@ -16,9 +18,10 @@ public class Person {
     public String toString(){
         String data = new String();
         data += "ID: "+id+"; name: "+name+"; Coordinates: ("+coordinates.toString()+
-        "); creation date: "+creationDate.toString()+"; heigt: "+height+"; weight: "+weight+
-        "passport ID: "+passportID+"; hair color: "+hairColor.name()+
-        "; location: "+location.toString()+"\n";
+        "); creation date: "+(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")).format(creationDate)+
+        "; heigt: "+height+"; weight: "+weight+
+        "; passport ID: "+passportID+"; hair color: "+hairColor.name()+
+        "; location: ("+location.toString()+")\n";
         return data;
     }
     public String[] getCSV(){
@@ -26,7 +29,7 @@ public class Person {
         listStr.add(String.valueOf(id));
         listStr.add(name);
         listStr.addAll(coordinates.getCSV());
-        listStr.add(creationDate.toString());
+        listStr.add(Long.toString(creationDate.getTime()));
         listStr.add(String.valueOf(height));
         listStr.add(String.valueOf(weight));
         listStr.add(passportID);
@@ -34,4 +37,39 @@ public class Person {
         listStr.addAll(location.getCSV());
         return listStr.toArray(new String[0]);
     }
+    public String getName(){
+        return name;
+    }
+    
+    public Person(ArrayList<String> values) {
+        
+        this.name = values.get(0);
+        this.coordinates = new Coordinates(Long.parseLong(values.get(1)),
+                Long.parseLong(values.get(2)));
+        this.height = Long.parseLong(values.get(3));
+        this.weight = Long.parseLong(values.get(4));
+        this.passportID = values.get(5);
+        this.hairColor = Color.fromId(values.get(6).charAt(0));
+        this.location = new Location(Integer.parseInt(values.get(7)),
+                values.get(8), values.get(9));
+
+        this.id = Integer.parseInt(values.get(10));
+        this.creationDate = new Date(Long.parseLong(values.get(11)));
+    }
+    public String getID(){
+        return String.valueOf(id);
+    }
 }
+
+// public void addField(int id, Object obj){
+    //     switch(id){
+    //         case 0 ->{
+    //             this.name = obj.toString();
+    //         }
+    //         case 2-{
+    //             if(this.coordinates.equals(null)){
+    //                 this.coordinates = new Coordinates(Long.valueOf(obj.), 0);
+    //             }
+    //         }
+    //     }
+    // }

@@ -18,4 +18,8 @@ public class Coordinates {
         listStr.add(String.valueOf(y));
         return listStr;
     }
+    public Coordinates (Long x, Long y){
+        this.x = x;
+        this.y = y;
+    }
 }

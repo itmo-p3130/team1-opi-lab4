@@ -19,4 +19,12 @@ public class Location {
         listStr.add(name);
         return listStr;
     }
+
+    public Location(Integer x, String y, String name){
+        this.x = x;
+        if(y!=null) {
+            this.y = (float) Double.parseDouble(y);
+        }
+        this.name = name;
+    }
 }

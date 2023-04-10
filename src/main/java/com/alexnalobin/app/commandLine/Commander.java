@@ -64,6 +64,8 @@ public class Commander extends Thread {
                     case info -> addCommandToQueue(commands.new command_info());
                     case argument -> addCommandToQueue(commands.new command_argument());
                     case save -> addCommandToQueue(commands.new command_save());
+                    case show -> addCommandToQueue(commands.new command_show());
+                    
                 }
                 conveyor.comm.remove(0);
                 conveyor.comm_buff.add(command_args);

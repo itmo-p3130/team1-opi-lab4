@@ -1,18 +1,55 @@
 package com.alexnalobin.app.commandLine;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
 import com.alexnalobin.app.commandLine.command;
 import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.command_condition;
 
+import com.opencsv.CSVReader;
+
 public class Commands {
     Conveyor conveyor;
-    Commands(Conveyor conv){
+    Object conditor;
+    Object answer_conditor;
+    Commands(Conveyor conv, Object cond, Object answcond){
         this.conveyor = conv;
+        this.conditor = cond;
+        this.answer_conditor = answcond;
+    }
+    public void sendAwake(){
+        synchronized (answer_conditor) {
+            answer_conditor.notifyAll();
+        }
     }
 
     public class command_help implements command{
         command_help(){}
         public void execute() throws InterruptedException {
-            Answer answ = new Answer(command_condition.finished,"\\u001b[31mInfo-stroke");
+            FileReader file;
+            Answer answ;
+            try {
+                StringBuilder string = new StringBuilder();
+                file = new FileReader("./help-info.txt");
+                int character;
+                while((character = file.read()) != -1) {
+                    string.append((char)character);
+                }
+                file.close();
+                answ = new Answer(command_condition.finished,string.toString());
+            } catch (FileNotFoundException e) {
+                answ = new Answer(command_condition.critical_error, e.toString());
+            } catch (IOException e) {
+                answ = new Answer(command_condition.critical_error, e.toString());
+            }
             conveyor.answer.add(answ);
         };
         public void repeat(){};
@@ -20,7 +57,26 @@ public class Commands {
     }
     public  class command_info implements command{
         command_info(){}
-        public void execute() throws InterruptedException {};
+        public void execute() throws InterruptedException {
+            FileReader file;
+            Answer answ;
+            try {
+                StringBuilder string = new StringBuilder();
+                file = new FileReader("./help-info.txt");
+                int character;
+                while ((character = file.read()) != -1) {
+                    string.append((char) character);
+                }
+                file.close();
+                answ = new Answer(command_condition.finished, string.toString());
+            } catch (FileNotFoundException e) {
+                answ = new Answer(command_condition.critical_error, e.toString());
+            } catch (IOException e) {
+                answ = new Answer(command_condition.critical_error, e.toString());
+            }
+            conveyor.answer.add(answ);
+            sendAwake();
+        };
         public void repeat(){};
         public void set_next_command(command com){};
     }
@@ -29,6 +85,79 @@ public class Commands {
         public void execute(){};
         public void repeat(){};
         public void set_next_command(command com){};
+    }
+    
+    public class command_argument implements command {
+        command_argument() {}
+        public void execute() {
+            String[] arguments = conveyor.comm_buff.get(0).toArray(new String[0]);
+            String path_to_file = arguments[0];
+            if (arguments[0].length() == 0) {
+                Answer answ = new Answer(command_condition.waiting_for_input,
+                        "Введите путь к файлу-коллекции: ");
+                conveyor.answer.add(answ);
+                sendAwake();
+                synchronized (conditor) {
+                    try {
+                        conditor.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                path_to_file = conveyor.comm.get(conveyor.comm.size()-1);
+            }
+    
+            File file = new File(path_to_file);
+            try {
+                if(file.isFile() == true){
+                    String[] csvFile_initData;
+                    try(Reader reader = Files.newBufferedReader(Paths.get(path_to_file))){
+                        try(CSVReader csvReader = new CSVReader(reader)){
+                            csvFile_initData = csvReader.readNext();
+                            if(csvFile_initData.length == 4){
+                                conveyor.csv_core_author = csvFile_initData[0];
+                                conveyor.csv_date_initialization = csvFile_initData[1];
+                                conveyor.csv_collection_author = csvFile_initData[2];
+                                conveyor.csv_collection_type = csvFile_initData[3];
+                                conveyor.path_to_collection = path_to_file;
+                            }else{
+                                conveyor.answer.add(new Answer(command_condition.critical_error,
+                                 "Probably an unsupported file-collection type is being used at: "
+                                 + path_to_file));
+                                 this.repeat();
+                                 return;
+                            }
+                        }
+                    }  catch (Exception e) {
+                        conveyor.answer.add(new Answer(command_condition.critical_error,
+                         "Some problem with file at path: "+path_to_file+" \n"+e));
+                         this.repeat();
+                         return;
+                    }
+                    conveyor.path_to_collection = path_to_file;
+                }
+                else{
+                    conveyor.answer.add(new Answer(command_condition.non_critical_error,
+                            "This file doesn't exist: " + path_to_file));
+                    this.repeat();
+                    return;
+                }
+            }catch(SecurityException e){
+                conveyor.answer.add(new Answer(command_condition.critical_error,
+                        "Seems we don't have access to this file:" + path_to_file + " \n" + e));
+                        this.repeat();
+                        return;
+
+            }
+        };
+        public void repeat() {
+            sendAwake();
+            conveyor.comm_buff.get(0).remove(0);
+            conveyor.comm_buff.get(0).add("");
+            this.execute();
+        };
+        public void set_next_command(command com) {
+        };
     }
     public  class command_add implements command{
         command_add(){}

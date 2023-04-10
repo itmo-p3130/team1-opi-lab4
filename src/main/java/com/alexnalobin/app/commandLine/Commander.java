@@ -15,31 +15,33 @@ public class Commander extends Thread {
     public Commands commands;
     public Conveyor conveyor;
     public Session session;
-    public Commander(String name, Thread semaphore, Object cond, Conveyor conv, Session session){
+    public Object answer_conditor;
+    public Commander(String name, Thread semaphore, Object cond, Conveyor conv, Session session, Object answcond){
         this.name = name;
         this.processing_semaphore=semaphore;
         this.conditor = cond;
         this.setName(this.name);
         this.conveyor = conv;
-        this.commands = new Commands(conv);
+        this.commands = new Commands(conv, cond, answcond);
         this.session = session;
+        this.answer_conditor = answcond;
     }
     private void nextCommand(){
         String command_raw = conveyor.comm.get(0).strip();
         String[] command_splited = command_raw.split("\\s+");
         String command_base = command_splited[0];
-        String[] command_args = new String[128];
+        ArrayList<String> command_args = new ArrayList<>();
         if(command_splited.length >= 2) {
             for(int i = 1; i != command_splited.length; i++) {
-                command_args[i - 1] = command_splited[i];
+                command_args.add(command_splited[i]);
             }
         } else {
-            command_args[0] = "";
+            command_args.add("");
         }
         if(command_base.length()==0){
             conveyor.comm.remove(0);
             Answer answ = new Answer(command_condition.finished,"");
-            conveyor.answer.add(answ);
+            addAnswer(answ);
             return;
         }
         ArrayList<allCommands> lvt_commands= new ArrayList<allCommands>();
@@ -60,15 +62,17 @@ public class Commander extends Thread {
                     case skip -> addCommandToQueue(commands.new command_skip());
                     case add -> addCommandToQueue(commands.new command_add());
                     case info -> addCommandToQueue(commands.new command_info());
+                    case argument -> addCommandToQueue(commands.new command_argument());
                 }
                 conveyor.comm.remove(0);
+                conveyor.comm_buff.add(command_args);
                 return;
             }
         }
 
         conveyor.comm.remove(0);
         Answer answ = new Answer(command_condition.finished,"There is no such command, perhaps you mean: "+lvt_commands.toString());
-        conveyor.answer.add(answ);
+        addAnswer(answ);
     }
     @Override
     public void run(){
@@ -95,20 +99,13 @@ public class Commander extends Thread {
                 }finally {
                     current_command.set_next_command(null);
                 }
-//                synchronized (conditor){
-//                    conditor.notifyAll();
-//                }System.out.println("Commander notify all (acr): "+conveyor.answer.size()+" "+conveyor.comm.size()+" "+conveyor.cmdready.size());
-                conveyor.cmdready.remove(0);
-            }
-            if(!(conveyor.answer.size() == 0)){
-                try {
-                    session.getBasicRemote().sendText(conveyor.answer.get(0).answer);
-                    conveyor.answer.remove(0);
-                } catch (Exception e) {
-                    // TODO: handle exception
-                    System.err.print(e);
+                synchronized (answer_conditor) {
+                    answer_conditor.notifyAll();
                 }
+                conveyor.cmdready.remove(0);
+                conveyor.comm_buff.remove(0);
             }
+            
         }
     }
     private void addCommandToQueue(command com){
@@ -136,5 +133,10 @@ public class Commander extends Thread {
         }
         return cost[len0 - 1];
     }
-
+    public void addAnswer(Answer answer){
+        conveyor.answer.add(answer);
+        synchronized (answer_conditor) {
+            answer_conditor.notifyAll();
+        }
+    }
 }

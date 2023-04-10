@@ -1,6 +1,6 @@
 package com.alexnalobin.app;
 import com.alexnalobin.app.commandLine.Commander;
-//import com.alexnalobin.app.consoleParser.Parser;
+import com.alexnalobin.app.lazySender.AnswerSender;
 import com.alexnalobin.app.commandLine.Conveyor;
 
 import jakarta.websocket.Session;
@@ -19,16 +19,17 @@ public class App extends Thread{
     }
     @Override
     public void run() {
-        
-        // Parser prs = new Parser("Main Parser thread of " +
-        // session.getId(),Thread.currentThread(), condition);
-        Commander com = new Commander("Main Commander-Core thread of " + session.getId(), Thread.currentThread(), condition, conv, session);
+        Object answer_condition = new Object();
+        AnswerSender send = new AnswerSender("Main Sender thread of " + session.getId(),
+         Thread.currentThread(), answer_condition, conv, session);
+        Commander com = new Commander("Main Commander-Core thread of " + session.getId(),
+         Thread.currentThread(), condition, conv, session, answer_condition);
         com.start();
-        // prs.start();
+        send.start();
 
         try {
-            // prs.join();
             com.join();
+            send.join();
         } catch (InterruptedException e) {
             System.err.println("Cannot join thread. Exiting...");
         }

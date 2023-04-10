@@ -5,6 +5,7 @@ import com.alexnalobin.app.dataStruct.Person;
 
 import jakarta.websocket.Session;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
 
@@ -12,9 +13,15 @@ public class Conveyor {
     public final Vector<String> comm = new Vector<String>();
     public final Vector<Answer> answer = new Vector<Answer>();
     public final Vector<command> cmdready = new Vector<command>();
+    public final Vector<ArrayList<String>> comm_buff = new Vector<ArrayList<String>>();
 
     HashSet<Person> data = new HashSet<Person>();
+    String path_to_collection = new String("./unknown-collection.csv");
 
+    String csv_core_author;
+    String csv_date_initialization;
+    String csv_collection_author;
+    String csv_collection_type;
 
 }
 //    public class cmd {

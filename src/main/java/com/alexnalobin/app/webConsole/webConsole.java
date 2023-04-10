@@ -29,7 +29,7 @@ public class webConsole {
 
     @OnOpen
     public void hello(Session session) throws IOException {
-        session.getBasicRemote().sendText("Server-Client sessionID: \n\n" + session.getId());
+        session.getBasicRemote().sendText("Server-Client sessionID: " + session.getId());
         System.out.println("WebSocket opened: " + session.getId());
         App sessionCore = new App(null, session);
         sessionCore.start();

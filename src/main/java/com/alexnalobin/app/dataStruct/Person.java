@@ -10,4 +10,5 @@ public class Person {
     private String passportID; //Длина строки не должна быть больше 33, Значение этого поля должно быть уникальным, Поле может быть null
     private Color hairColor; //Поле не может быть null
     private Location location; //Поле не может быть null
+    
 }

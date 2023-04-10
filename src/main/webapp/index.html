@@ -84,7 +84,7 @@
     function handleSubmit(event) {
       event.preventDefault();
       const message = input.value;
-      addMessage(message);
+      addMessage("\\u001B[36m" + message);
       input.value = '';
       output.scrollTop = output.scrollHeight; // scroll to bottom of output
       ws.send(message); // send message through WebSocket

@@ -527,7 +527,7 @@
     </socket-binding-group>
     <deployments>
         <deployment name="Console.war" runtime-name="Console.war">
-            <content sha1="e1e93b0a2a026818c3ee7409882b0d8c510fb1a6"/>
+            <content sha1="875e6e728d606e9592ba936ac708913fa86b1215"/>
         </deployment>
     </deployments>
 </server>

@@ -169,36 +169,37 @@ public class Commands {
                         try (CSVReader csvReader = new CSVReader(reader)) {
                             csvFile_initData = csvReader.readNext();
                             if (csvFile_initData.length == 4) {
+                                if (conveyor.path_to_collection != path_to_file) {
                                 conveyor.csv_core_author = csvFile_initData[0];
                                 conveyor.csv_date_initialization = csvFile_initData[1];
                                 conveyor.csv_collection_author = csvFile_initData[2];
                                 conveyor.csv_collection_type = csvFile_initData[3];
                                 conveyor.path_to_collection = path_to_file;
-                                int num = 1;
+                               
                                 String [] nextLine;
                                 while((nextLine = csvReader.readNext())!= null){
                                     conveyor.answer.add(new Answer(command_condition.working,
                                      "Adding data with id("+nextLine[0]+")."));
-                                     
-                                    try{
-                                    // conveyor.comm.add(num, "add -c" + String.join(" ",
-                                    //     Arrays.copyOfRange(nextLine, 1, nextLine.length)));
-                                    conveyor.comm.add(num, "add -c" + String.join(" ",
-                                        nextLine));
-                                    }catch(ArrayIndexOutOfBoundsException e){
-                                        // conveyor.comm.add("add -c" + String.join(" ",
-                                        //         Arrays.copyOfRange(nextLine, 1, nextLine.length)));
-                                        conveyor.comm.add(num, "add -c" + String.join(" ",
-                                                nextLine));
-                                        System.err.println("add " + String.join(" ",nextLine));
-                                    }
+                                    //  for(int i = 0; i!=nextLine.length;i++){
+                                    //     System.err.println(i+" : "+nextLine[i]);
+                                    //  }
+                                    Person person = new Person(new ArrayList<String>(Arrays.asList(nextLine[1],
+                                            nextLine[2],nextLine[3],nextLine[5],nextLine[6],nextLine[7],
+                                            nextLine[8],nextLine[9],nextLine[10],nextLine[11],"" + nextLine[7].hashCode(),
+                                            nextLine[4])));
 
-                                    num+=1;
+                                    conveyor.data.add(person);
                                 }
                                 conveyor.answer.add(new Answer(command_condition.critical_error,
                                         "Collection initialized successfully : "
                                                 + path_to_file));
                                 sendAwake();
+                                }else{
+                                    conveyor.answer.add(new Answer(command_condition.finished,
+                                            "Collection is up-to-date : "
+                                                    + path_to_file));
+                                    sendAwake();
+                                }
                             } else {
                                 conveyor.answer.add(new Answer(command_condition.critical_error,
                                         "Probably an unsupported file-collection type is being used at: "
@@ -231,11 +232,11 @@ public class Commands {
                         String[] infoStrng = { conveyor.csv_core_author, conveyor.csv_date_initialization,
                                 conveyor.csv_collection_author,
                                 conveyor.csv_collection_type };
-                        writer.writeNext(infoStrng);
+                        writer.writeNext(infoStrng, false);
                         writer.flush();
                         for (Person person : conveyor.data) {
                             String[] dataString = person.getCSV();
-                            writer.writeNext(dataString);
+                            writer.writeNext(dataString, false);
                             writer.flush();
                         }
                         writer.close();
@@ -661,27 +662,27 @@ public class Commands {
             String path_to_file = conveyor.path_to_collection;
             FileOutputStream outputStream;
             CSVWriter writer;
-            String path_to_file_buffer = conveyor.comm_buff.get(0).get(0);
-            if(path_to_file_buffer.length()!=0){
-                path_to_file = path_to_file_buffer;
-                try {
-                           outputStream = new FileOutputStream(path_to_file);
+        
+            try {
+                outputStream = new FileOutputStream(path_to_file);
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
                 writer = new CSVWriter(new OutputStreamWriter(bufferedOutputStream));
                 long localTimeMillis = System.currentTimeMillis();
                 String formattedDateTime = Long.toString(localTimeMillis);
-                String[] infoStrng = { "SSS_Krut\'s core", formattedDateTime, conveyor.csv_collection_author,
-                        "HashSet-Person" };
-                writer.writeNext(infoStrng);
+                String[] infoStrng = { conveyor.csv_core_author, conveyor.csv_date_initialization,
+                    conveyor.csv_collection_author,conveyor.csv_collection_type };
+                writer.writeNext(infoStrng, false);
                 writer.flush();
                 for (Person person : conveyor.data) {
                     String[] dataString = person.getCSV();
-                    writer.writeNext(dataString);
+                    System.err.println(dataString);
+                    writer.writeNext(dataString, false);
                     writer.flush();
                 }
+                System.err.println(path_to_file);
                 writer.close();
                 conveyor.answer.add(new Answer(command_condition.finished,
-                        "Коллекция успешно сохранена :" + path_to_file));
+                        "Коллекция успешно сохранена в:" + path_to_file));
                 sendAwake();
             } catch (FileNotFoundException e) {
                 conveyor.answer.add(new Answer(command_condition.critical_error,
@@ -692,37 +693,6 @@ public class Commands {
                         "There is some problem with CSVWriter:" + path_to_file));
                 sendAwake();
             }
-            }else{
-                try {
-                    outputStream = new FileOutputStream(path_to_file);
-                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
-                    writer = new CSVWriter(new OutputStreamWriter(bufferedOutputStream));
-                    long localTimeMillis = System.currentTimeMillis();
-                    String formattedDateTime = Long.toString(localTimeMillis);
-                    String[] infoStrng = { conveyor.csv_core_author, conveyor.csv_date_initialization,
-                     conveyor.csv_collection_author,conveyor.csv_collection_type };
-                    writer.writeNext(infoStrng);
-                    writer.flush();
-                    for (Person person : conveyor.data) {
-                        String[] dataString = person.getCSV();
-                        System.err.println(dataString);
-                        writer.writeNext(dataString);
-                        writer.flush();
-                    }
-                    System.err.println(path_to_file);
-                    writer.close();
-                    conveyor.answer.add(new Answer(command_condition.finished,
-                            "Коллекция успешно сохранена в:" + path_to_file));
-                    sendAwake();
-                } catch (FileNotFoundException e) {
-                    conveyor.answer.add(new Answer(command_condition.critical_error,
-                            "This file doesn't exist(please input \"argument\" command):" + path_to_file));
-                    sendAwake();
-                } catch (IOException e) {
-                    conveyor.answer.add(new Answer(command_condition.critical_error,
-                            "There is some problem with CSVWriter:" + path_to_file));
-                    sendAwake();
-                }}
             
         }
 

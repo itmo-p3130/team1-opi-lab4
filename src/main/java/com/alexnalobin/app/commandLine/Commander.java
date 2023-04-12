@@ -13,7 +13,6 @@ public class Commander extends Thread {
     private final String name;
     private Object conditor;
     public Thread processing_semaphore;
-    public Commands commands;
     public Conveyor conveyor;
     public Session session;
     public Object answer_conditor;
@@ -23,7 +22,6 @@ public class Commander extends Thread {
         this.conditor = cond;
         this.setName(this.name);
         this.conveyor = conv;
-        this.commands = new Commands(conv, cond, answcond);
         this.session = session;
         this.answer_conditor = answcond;
     }

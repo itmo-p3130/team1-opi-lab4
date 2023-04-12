@@ -1,4 +1,5 @@
 package com.alexnalobin.app.commandLine;
+import com.alexnalobin.app.commandLine.Commands.*;
 import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.Person;
 import com.alexnalobin.app.dataStruct.command_condition;
@@ -57,15 +58,23 @@ public class Commander extends Thread {
             }
             if(levDist==0){
                 switch (command_exmp){
-                    case help -> addCommandToQueue(commands.new command_help());
-                    case queue -> addCommandToQueue(commands.new command_queue());
-                    case skip -> addCommandToQueue(commands.new command_skip());
-                    case add -> addCommandToQueue(commands.new command_add());
-                    case info -> addCommandToQueue(commands.new command_info());
-                    case argument -> addCommandToQueue(commands.new command_argument());
-                    case save -> addCommandToQueue(commands.new command_save());
-                    case show -> addCommandToQueue(commands.new command_show());
-                    
+                    case add -> addCommandToQueue(new command_add(this.conveyor,this.conditor,this.answer_conditor));
+                    case info -> addCommandToQueue(new command_info(this.conveyor,this.conditor,this.answer_conditor));
+                    case save -> addCommandToQueue(new command_save(this.conveyor,this.conditor,this.answer_conditor));
+                    case help -> addCommandToQueue(new command_help(this.conveyor,this.conditor,this.answer_conditor));
+                    case show -> addCommandToQueue(new command_show(this.conveyor,this.conditor,this.answer_conditor));
+                    case exit -> addCommandToQueue(new command_exit(this.conveyor,this.conditor,this.answer_conditor));
+                    case queue -> addCommandToQueue(new command_queue(this.conveyor,this.conditor,this.answer_conditor));
+                    case clear -> addCommandToQueue(new command_clear(this.conveyor,this.conditor,this.answer_conditor));
+                    case update -> addCommandToQueue(new command_update(this.conveyor,this.conditor,this.answer_conditor));
+                    case history -> addCommandToQueue(new command_history(this.conveyor,this.conditor,this.answer_conditor));
+                    case argument -> addCommandToQueue(new command_argument(this.conveyor,this.conditor,this.answer_conditor));
+                    case add_if_max -> addCommandToQueue(new command_add_if_max(this.conveyor,this.conditor,this.answer_conditor));
+                    case add_if_min -> addCommandToQueue(new command_add_if_min(this.conveyor,this.conditor,this.answer_conditor));
+                    case execute_script -> addCommandToQueue(new command_execute_script(this.conveyor,this.conditor,this.answer_conditor));
+                    case remove_all_by_height -> addCommandToQueue(new command_remove_all_by_height(this.conveyor,this.conditor,this.answer_conditor));
+                    case count_less_than_location -> addCommandToQueue(new command_count_less_than_location(this.conveyor,this.conditor,this.answer_conditor));
+                    case count_greater_than_weight -> addCommandToQueue(new command_count_greater_than_weight(this.conveyor,this.conditor,this.answer_conditor)); 
                 }
                 conveyor.comm.remove(0);
                 conveyor.comm_buff.add(command_args);

@@ -15,13 +15,13 @@ public class Conveyor {
     public final Vector<command> cmdready = new Vector<command>();
     public final Vector<ArrayList<String>> comm_buff = new Vector<ArrayList<String>>();
 
-    HashSet<Person> data = new HashSet<Person>();
-    String path_to_collection = new String("./unknown-collection.csv");// ./unknown-collection.csv
+    public HashSet<Person> data = new HashSet<Person>();
+    public String path_to_collection = new String("./unknown-collection.csv");// ./unknown-collection.csv
 
-    String csv_core_author;
-    String csv_date_initialization;
-    String csv_collection_author;
-    String csv_collection_type;
+    public String csv_core_author;
+    public String csv_date_initialization;
+    public String csv_collection_author;
+    public String csv_collection_type;
 
 }
 //    public class cmd {

@@ -2,6 +2,8 @@ package com.alexnalobin.app.commandLine.Commands;
 
 import com.alexnalobin.app.commandLine.Conveyor;
 import com.alexnalobin.app.commandLine.command;
+import com.alexnalobin.app.dataStruct.Answer;
+import com.alexnalobin.app.dataStruct.command_condition;
 
 public class command_clear implements command {
     private Conveyor conveyor;
@@ -15,6 +17,11 @@ public class command_clear implements command {
     }
 
     public void execute() {
+        conveyor.data.clear();
+        Answer answ = new Answer(command_condition.waiting_for_input,
+                "Введите путь к файлу-коллекции: ");
+        conveyor.answer.add(answ);
+        sendAwake();
     };
 
     public void repeat() {
@@ -22,4 +29,10 @@ public class command_clear implements command {
 
     public void set_next_command(command com) {
     };
+    
+    private void sendAwake() {
+        synchronized (answer_conditor) {
+            answer_conditor.notifyAll();
+        }
+    }
 }

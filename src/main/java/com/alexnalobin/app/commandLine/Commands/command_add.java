@@ -30,15 +30,7 @@ public class command_add implements command {
     public void execute() {
         String[] arguments = conveyor.comm_buff.get(0).toArray(new String[0]);
         String command_argument = arguments[0];
-        if (command_argument.equals("-c")) {
-            arguments = Arrays.copyOfRange(arguments, 2, arguments.length);
-            String[] arguments_new = new String[arguments.length - 1];
-            System.arraycopy(arguments, 4, arguments_new, 3, arguments.length - 4);
-            arguments = arguments_new;
-            System.err.println(arguments);
-        }
         conveyor.answer.add(new Answer(command_condition.finished, String.join(" ", arguments)));
-        System.err.println(arguments);
         ArrayList<String> person_list = new ArrayList<>(Arrays.asList(
                 "", "", "", "", "", "", "", "", "", ""));
         ArrayList<Integer> field_not_defined = new ArrayList<>(Arrays.asList(
@@ -51,7 +43,7 @@ public class command_add implements command {
                 String arg = arguments[i];
                 String null_string = new String("null");
                 if (arg.equals(null_string)) {
-                    arg = null;
+                    arg = "null";
                 }
                 if (isFit(arg, i)) {
                     person_list.set(i, arg);
@@ -101,12 +93,12 @@ public class command_add implements command {
     protected boolean isFit(String arg, int num) {
         switch (num) {
             case 0 -> {
-                if (arg.length() != 0 & !arg.equals(null)) {
+                if (arg.length() != 0 & !arg.equals("null")) {
                     return true;
                 }
             }
             case 1 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     conveyor.answer.add(new Answer(command_condition.non_critical_error,
                             "Значение " + arg + " не подходит по укзанным ограничениям."));
                     return false;
@@ -127,7 +119,7 @@ public class command_add implements command {
                 }
             }
             case 2 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     conveyor.answer.add(new Answer(command_condition.non_critical_error,
                             "Значение " + arg + " не подходит по укзанным ограничениям."));
                     return false;
@@ -143,7 +135,7 @@ public class command_add implements command {
             }
             // case 3 -- height
             case 3 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return true;
                 }
                 try {
@@ -162,7 +154,7 @@ public class command_add implements command {
                 }
             }
             case 4 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     conveyor.answer.add(new Answer(command_condition.non_critical_error,
                             "Значение " + arg + " не подходит по укзанным ограничениям."));
                     return false;
@@ -183,7 +175,7 @@ public class command_add implements command {
                 }
             } // case 5 -- passport id
             case 5 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return true;
                 }
                 try {
@@ -195,7 +187,7 @@ public class command_add implements command {
                     }
                     boolean is_in_data = false;
                     for (Person pers_iter : conveyor.data) {
-                        if (pers_iter.getName().equals(arg)) {
+                        if (pers_iter.getpassportID().equals(arg)) {
                             is_in_data = true;
                             break;
                         }
@@ -215,7 +207,7 @@ public class command_add implements command {
             }
             // case 6 -- color
             case 6 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return false;
                 }
                 try {
@@ -239,7 +231,7 @@ public class command_add implements command {
                 }
             }
             case 7 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return false;
                 }
                 try {
@@ -258,7 +250,7 @@ public class command_add implements command {
                 }
             } // Loc.y
             case 8 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return true;
                 }
                 try {
@@ -271,7 +263,7 @@ public class command_add implements command {
                 }
             }
             case 9 -> {
-                if (arg.equals(null)) {
+                if (arg.equals("null")) {
                     return false;
                 }
                 return true;

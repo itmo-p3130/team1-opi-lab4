@@ -22,8 +22,11 @@ public class Location {
 
     public Location(Integer x, String y, String name){
         this.x = x;
-        if(y!=null) {
+        if(y!="null") {
             this.y = (float) Double.parseDouble(y);
+        }
+        else {
+            y="null";
         }
         this.name = name;
     }

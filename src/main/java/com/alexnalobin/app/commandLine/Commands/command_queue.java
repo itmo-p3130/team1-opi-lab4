@@ -18,7 +18,6 @@ public class command_queue implements command {
 
     public void execute() {
         String queue = "";
-        Object conveyor;
         for (int i = 0; i != conveyor.cmdready.size(); i++) {
             queue += conveyor.cmdready.get(i).toString() + ";";
             if ((queue.lastIndexOf("\n") == -1 | queue.length() > 32)
@@ -27,6 +26,7 @@ public class command_queue implements command {
             }
         }
         conveyor.answer.add(new Answer(command_condition.finished, "Current queue: " + queue));
+        sendAwake();
     };
 
     public void repeat() {

@@ -12,6 +12,7 @@ import java.util.Vector;
 public class Conveyor {
     public final Vector<String> comm = new Vector<String>();
     public final Vector<Answer> answer = new Vector<Answer>();
+    public final Vector<command> history = new Vector<command>();
     public final Vector<command> cmdready = new Vector<command>();
     public final Vector<ArrayList<String>> comm_buff = new Vector<ArrayList<String>>();
 

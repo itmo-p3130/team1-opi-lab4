@@ -24,6 +24,9 @@ public class Commander extends Thread {
         this.conveyor = conv;
         this.session = session;
         this.answer_conditor = answcond;
+
+        this.conveyor.cmdready.add(new command_argument(conv, cond, answcond));
+        this.conveyor.comm_buff.add(new ArrayList<String>(Arrays.asList(conv.path_to_collection)));
     }
     private void nextCommand(){
         String command_raw = conveyor.comm.get(0).strip();
@@ -61,7 +64,7 @@ public class Commander extends Thread {
                     case save -> addCommandToQueue(new command_save(this.conveyor,this.conditor,this.answer_conditor));
                     case help -> addCommandToQueue(new command_help(this.conveyor,this.conditor,this.answer_conditor));
                     case show -> addCommandToQueue(new command_show(this.conveyor,this.conditor,this.answer_conditor));
-                    case exit -> addCommandToQueue(new command_exit(this.conveyor,this.conditor,this.answer_conditor));
+                    case exit -> addCommandToQueue(new command_exit(this.conveyor,this.session,this.answer_conditor));
                     case queue -> addCommandToQueue(new command_queue(this.conveyor,this.conditor,this.answer_conditor));
                     case clear -> addCommandToQueue(new command_clear(this.conveyor,this.conditor,this.answer_conditor));
                     case update -> addCommandToQueue(new command_update(this.conveyor,this.conditor,this.answer_conditor));
@@ -118,6 +121,7 @@ public class Commander extends Thread {
     }
     private void addCommandToQueue(command com){
         conveyor.cmdready.add(com);
+        conveyor.history.add(com);
     }
     private int getLevenshteinDistance(String lhs, String rhs){
         int len0 = lhs.length() + 1;

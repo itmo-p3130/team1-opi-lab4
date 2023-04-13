@@ -39,6 +39,13 @@ public class command_argument implements command {
 
     public void execute() {
         String[] arguments = conveyor.comm_buff.get(0).toArray(new String[0]);
+        if(arguments[0]==null){
+            Answer answ = new Answer(command_condition.waiting_for_input,
+                    "Аргумент строки не указан. Коллекция не загружена. ");
+            conveyor.answer.add(answ);
+            sendAwake();
+            return;
+        }
         String path_to_file = arguments[0];
         if (arguments[0].length() == 0) {
             Answer answ = new Answer(command_condition.waiting_for_input,
@@ -64,7 +71,6 @@ public class command_argument implements command {
                     try (CSVReader csvReader = new CSVReader(reader)) {
                         csvFile_initData = csvReader.readNext();
                         if (csvFile_initData.length == 4) {
-                            if (conveyor.path_to_collection != path_to_file) {
                                 conveyor.csv_core_author = csvFile_initData[0];
                                 conveyor.csv_date_initialization = csvFile_initData[1];
                                 conveyor.csv_collection_author = csvFile_initData[2];
@@ -90,21 +96,16 @@ public class command_argument implements command {
                                         "Collection initialized successfully : "
                                                 + path_to_file));
                                 sendAwake();
-                            } else {
-                                conveyor.answer.add(new Answer(command_condition.finished,
-                                        "Collection is up-to-date : "
-                                                + path_to_file));
-                                sendAwake();
                             }
-                        } else {
+                        else {
                             conveyor.answer.add(new Answer(command_condition.critical_error,
                                     "Probably an unsupported file-collection type is being used at: "
                                             + path_to_file));
                             this.repeat();
                             return;
                         }
-                    }
-                } catch (Exception e) {
+                } 
+            }catch (Exception e) {
                     conveyor.answer.add(new Answer(command_condition.critical_error,
                             "Some problem with file at path: " + path_to_file + " \n" + e));
                     this.repeat();
@@ -150,14 +151,14 @@ public class command_argument implements command {
                 }
                 return;
             }
-        } catch (SecurityException e) {
+        }catch (SecurityException e) {
             conveyor.answer.add(new Answer(command_condition.critical_error,
                     "Seems we don't have access to this file:" + path_to_file + " \n" + e));
             this.repeat();
             return;
 
         }
-    };
+        };
 
     public void repeat() {
         sendAwake();

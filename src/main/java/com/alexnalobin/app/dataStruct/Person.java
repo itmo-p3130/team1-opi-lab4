@@ -59,6 +59,10 @@ public class Person {
     public String getID(){
         return String.valueOf(id);
     }
+    
+    public String getpassportID() {
+        return String.valueOf(passportID);
+    }
 }
 
 // public void addField(int id, Object obj){

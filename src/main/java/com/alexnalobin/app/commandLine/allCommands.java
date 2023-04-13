@@ -1,6 +1,6 @@
 package com.alexnalobin.app.commandLine;
 
-enum allCommands{
+public enum allCommands{
     add,
     info,
     help,

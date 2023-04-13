@@ -1,5 +1,6 @@
 package com.alexnalobin.app.commandLine.Commands;
 
+import java.io.File;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
@@ -29,7 +30,7 @@ public class command_info implements command {
                     conveyor.csv_core_author + ", создана (кем/когда): " + conveyor.csv_collection_author +
                     "/" + dateString + ", типа коллекции: " + conveyor.csv_collection_type +
                     ", содержит элементов: " + conveyor.data.size() + ". Файл с коллекцией находится по пути: " +
-                    conveyor.path_to_collection);
+                    new File(conveyor.path_to_collection).getAbsolutePath());
         } else {
             answ = new Answer(command_condition.finished,
                     "Коллекция не инициализирована, для инициализации введите команду argument {path}");

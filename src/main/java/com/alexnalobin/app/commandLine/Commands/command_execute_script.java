@@ -119,6 +119,7 @@ public class command_execute_script implements command {
                     case argument -> addCommandToQueue(pos, new command_argument(this.conveyor,this.conditor,this.answer_conditor));
                     case add_if_max -> addCommandToQueue(pos, new command_add_if_max(this.conveyor,this.conditor,this.answer_conditor));
                     case add_if_min -> addCommandToQueue(pos, new command_add_if_min(this.conveyor,this.conditor,this.answer_conditor));
+                    case remove_by_id -> addCommandToQueue(pos, new command_remove_by_id(this.conveyor,this.conditor,this.answer_conditor));
                     case execute_script -> {addCommandToQueue(pos, new command_execute_script(this.conveyor,this.conditor,this.answer_conditor));command_args.addAll(attrib_behind);}
                     case remove_all_by_height -> addCommandToQueue(pos, new command_remove_all_by_height(this.conveyor,this.conditor,this.answer_conditor));
                     case count_less_than_location -> addCommandToQueue(pos, new command_count_less_than_location(this.conveyor,this.conditor,this.answer_conditor));

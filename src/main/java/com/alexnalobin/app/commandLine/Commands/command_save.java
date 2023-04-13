@@ -29,7 +29,8 @@ public class command_save implements command {
         FileOutputStream outputStream;
         CSVWriter writer;
 
-        if(path_to_file.equals(null) != true & path_to_file.length()==0){
+        if(path_to_file!=null ){
+            if(path_to_file.length()!=0){
             try {
                 outputStream = new FileOutputStream(path_to_file);
                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
@@ -60,6 +61,11 @@ public class command_save implements command {
             }
         }
 
+    }else{
+        conveyor.answer.add(new Answer(command_condition.critical_error,
+                        "Путь к коллекции не указан, чтобы указать файл с коллекцией введите команду argument {path}."));
+                sendAwake();
+    }
     }
 
     public void repeat() {

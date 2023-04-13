@@ -26,10 +26,11 @@ public class command_add implements command {
             answer_conditor.notifyAll();
         }
     }
-
+    
     public void execute() {
         String[] arguments = conveyor.comm_buff.get(0).toArray(new String[0]);
         String command_argument = arguments[0];
+        String id_from_command = getArg(arguments);
         conveyor.answer.add(new Answer(command_condition.finished, String.join(" ", arguments)));
         ArrayList<String> person_list = new ArrayList<>(Arrays.asList(
                 "", "", "", "", "", "", "", "", "", ""));
@@ -74,7 +75,11 @@ public class command_add implements command {
             this.repeat();
             return;
         }
-        person_list.add(String.valueOf(person_list.get(5).hashCode()));
+        if(id_from_command!=null){
+            person_list.add(id_from_command);
+        }else{
+            person_list.add(String.valueOf(System.currentTimeMillis()));
+        }
         person_list.add(String.valueOf(System.currentTimeMillis()));
         Person person = new Person(person_list);
         conveyor.data.add(person);
@@ -353,5 +358,17 @@ public class command_add implements command {
 
         }
         return num + " - is overflow.";
+    }
+    private String getArg(String[] arguments){
+        boolean is_find = false;
+        for(int i =0; i!=arguments.length;i++){
+            if(arguments[i].equals("\0u")){
+                is_find = true;
+            }
+            else if(is_find){
+                return arguments[i];
+            }
+        }
+        return null;
     }
 }

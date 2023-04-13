@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Person {
-    private int id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
+    private Long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
     private java.util.Date creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
@@ -53,27 +53,26 @@ public class Person {
         this.location = new Location(Integer.parseInt(values.get(7)),
                 values.get(8), values.get(9));
 
-        this.id = Integer.parseInt(values.get(10));
+        this.id = Long.parseLong(values.get(10));
         this.creationDate = new Date(Long.parseLong(values.get(11)));
     }
     public String getID(){
         return String.valueOf(id);
     }
+
+    public Long getID_long(){
+        return id;
+    }
     
     public String getpassportID() {
         return String.valueOf(passportID);
     }
-}
 
-// public void addField(int id, Object obj){
-    //     switch(id){
-    //         case 0 ->{
-    //             this.name = obj.toString();
-    //         }
-    //         case 2-{
-    //             if(this.coordinates.equals(null)){
-    //                 this.coordinates = new Coordinates(Long.valueOf(obj.), 0);
-    //             }
-    //         }
-    //     }
-    // }
+    public Long getWeight(){
+        return this.weight;
+    }
+
+    public Long getHeight(){
+        return this.height;
+    }
+}

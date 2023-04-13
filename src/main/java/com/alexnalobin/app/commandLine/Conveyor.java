@@ -3,8 +3,6 @@ package com.alexnalobin.app.commandLine;
 import com.alexnalobin.app.dataStruct.Answer;
 import com.alexnalobin.app.dataStruct.Person;
 
-import jakarta.websocket.Session;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;

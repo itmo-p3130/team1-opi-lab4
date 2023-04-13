@@ -72,6 +72,7 @@ public class Commander extends Thread {
                     case argument -> addCommandToQueue(new command_argument(this.conveyor,this.conditor,this.answer_conditor));
                     case add_if_max -> addCommandToQueue(new command_add_if_max(this.conveyor,this.conditor,this.answer_conditor));
                     case add_if_min -> addCommandToQueue(new command_add_if_min(this.conveyor,this.conditor,this.answer_conditor));
+                    case remove_by_id -> addCommandToQueue(new command_remove_by_id(this.conveyor,this.conditor,this.answer_conditor));
                     case execute_script -> addCommandToQueue(new command_execute_script(this.conveyor,this.conditor,this.answer_conditor));
                     case remove_all_by_height -> addCommandToQueue(new command_remove_all_by_height(this.conveyor,this.conditor,this.answer_conditor));
                     case count_less_than_location -> addCommandToQueue(new command_count_less_than_location(this.conveyor,this.conditor,this.answer_conditor));

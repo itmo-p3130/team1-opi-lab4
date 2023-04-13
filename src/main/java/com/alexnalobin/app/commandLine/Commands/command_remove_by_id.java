@@ -21,25 +21,25 @@ public class command_remove_by_id implements command {
         Long num = null;
         try {
             num = Long.parseLong(buffer);
-        } catch (Exception e) {
-            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение "+ buffer +
-             " не распознано. Вводите значение типа Integer."));
-             sendAwake();
-             return;
-        }
-        if(num != null){
-            for(Person pers : conveyor.data){
-                Long temp = pers.getID_long();
-                if(num == temp){
-                    conveyor.data.remove(pers);
-                    break;
+            if (num != null) {
+                for (Person pers : conveyor.data) {
+                    Long temp = pers.getID_long();
+                    if (num == temp) {
+                        conveyor.data.remove(pers);
+                        break;
+                    }
                 }
+                conveyor.answer.add(new Answer(command_condition.finished, "Удален элемент: " + num));
+                sendAwake();
             }
-            conveyor.answer.add(new Answer(command_condition.finished, "Удален элемент: "+ num));
+            if (conveyor.comm_buff.size() > 1) {
+                this.repeat();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение " + buffer +
+                    " не распознано. Вводите значение типа Integer."));
             sendAwake();
-        }
-        if(conveyor.comm_buff.size()>1){
-            this.repeat();
             return;
         }
     };

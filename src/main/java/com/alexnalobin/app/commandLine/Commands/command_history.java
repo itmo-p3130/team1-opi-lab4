@@ -15,55 +15,53 @@ public class command_history implements command {
         this.conditor = cond;
         this.answer_conditor = answcond;
     }
+    
     public void execute() {
         String buffer = conveyor.comm_buff.get(0).get(0);
         int count;
-        if(buffer.length()!=0){
-            try {
+        try {
+            if (buffer.length() != 0) {
                 count = Integer.parseInt(buffer);
-            } catch (Exception e) {
-                conveyor.answer.add(new Answer(command_condition.critical_error,
-                 "Значение "+ buffer + " не поддерживается, вводите целое число. Будет выведена вся история."));
-                sendAwake();
-                this.repeat();
-                return;
-            }
-            String answ = new String("Команды, которые были исполнены ("+count+"): ");
-            System.err.println(count);
-            if(count < 0){
-                for (command cmd : conveyor.history) {
-                    if(count==0) {
-                        break;
+                String answ = new String("Команды, которые были исполнены (" + count + "): ");
+                if (count < 0) {
+                    for (command cmd : conveyor.history) {
+                        if (count == 0) {
+                            break;
+                        }
+                        count++;
+                        answ += cmd.getClass().getName() + ", ";
                     }
-                    count++;
+                    answ = answ.substring(0, answ.length() - 2) + ".";
+                } else if (count > 0) {
+                    for (int i = conveyor.history.size() - 1; i >= 0; i--) {
+                        if (count == 0) {
+                            break;
+                        }
+                        count--;
+                        command cmd = conveyor.history.get(i);
+                        answ += cmd.getClass().getName() + ", ";
+                    }
+                    answ = answ.substring(0, answ.length() - 1) + ".";
+                }
+                conveyor.answer.add(new Answer(command_condition.finished,
+                        answ));
+                sendAwake();
+            } else {
+                String answ = new String("Команды, которые были исполнены (" + conveyor.history.size() + "): ");
+                for (command cmd : conveyor.history) {
                     answ += cmd.getClass().getName() + ", ";
                 }
-                answ = answ.substring(0, answ.length() - 2) + ".";
+                answ = answ.substring(0, answ.length() - 1) + ".";
+                conveyor.answer.add(new Answer(command_condition.finished,
+                        answ));
+                sendAwake();
             }
-            else if (count > 0){
-                for (int i = conveyor.history.size() - 1; i >= 0; i--) {
-                    if (count == 0) {
-                        break;
-                    }
-                    count--;
-                    command cmd = conveyor.history.get(i);
-                    answ += cmd.getClass().getName()+", ";
-                }
-                answ = answ.substring(0, answ.length()-1)+".";
-            }
-            conveyor.answer.add(new Answer(command_condition.finished,
-                    answ));
+        } catch (Exception e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error,
+                    "Значение " + buffer + " не поддерживается, вводите целое число. Будет выведена вся история."));
             sendAwake();
-        }
-        else {
-            String answ = new String("Команды, которые были исполнены (" + conveyor.history.size() + "): ");
-            for (command cmd : conveyor.history) {
-                answ += cmd.getClass().getName() + ", ";
-            }
-            answ = answ.substring(0, answ.length() - 1) + ".";
-            conveyor.answer.add(new Answer(command_condition.finished,
-                    answ));
-            sendAwake();
+            this.repeat();
+            return;
         }
     };
 

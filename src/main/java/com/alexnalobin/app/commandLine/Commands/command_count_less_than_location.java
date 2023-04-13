@@ -22,23 +22,24 @@ public class command_count_less_than_location implements command {
         Long num = null;
         try {
             num = Long.parseLong(buffer);
-        } catch (Exception e) {
-            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение "+ buffer +
-             " не распознано. Вводите значение типа Long."));
-             sendAwake();
-             return;
-        }
-        if(num != null){
-            Integer counter = 0;
-            for(Person pers : conveyor.data){
-                if(num > pers.getWeight()){
-                    counter +=1;
+            if (num != null) {
+                Integer counter = 0;
+                for (Person pers : conveyor.data) {
+                    if (num > pers.getWeight()) {
+                        counter += 1;
+                    }
                 }
+                conveyor.answer.add(new Answer(command_condition.finished,
+                        "Элементов, у которых значение ввеса меньше, чем " + num + ": " + counter));
+                sendAwake();
             }
-            conveyor.answer.add(new Answer(command_condition.finished, "Элементов, у которых значение ввеса меньше, чем "+ num + ": "+counter));
+        } catch (Exception e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение " + buffer +
+                    " не распознано. Вводите значение типа Long."));
             sendAwake();
+            return;
         }
-        if(conveyor.comm_buff.size()>1){
+        if (conveyor.comm_buff.size() > 1) {
             this.repeat();
             return;
         }

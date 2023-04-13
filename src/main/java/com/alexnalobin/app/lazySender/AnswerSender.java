@@ -3,7 +3,7 @@ package com.alexnalobin.app.lazySender;
 import jakarta.websocket.Session;
 import com.alexnalobin.app.commandLine.Conveyor;
 
-public class AnswerSender extends Thread{
+public class AnswerSender extends Thread {
     private final String name;
     private Object conditor;
     public Thread processing_semaphore;

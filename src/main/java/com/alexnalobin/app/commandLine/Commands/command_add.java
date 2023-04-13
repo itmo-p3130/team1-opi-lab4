@@ -2,6 +2,8 @@ package com.alexnalobin.app.commandLine.Commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.alexnalobin.app.commandLine.Conveyor;
 import com.alexnalobin.app.commandLine.command;
@@ -32,10 +34,8 @@ public class command_add implements command {
         String command_argument = arguments[0];
         String id_from_command = getArg(arguments);
         conveyor.answer.add(new Answer(command_condition.finished, String.join(" ", arguments)));
-        ArrayList<String> person_list = new ArrayList<>(Arrays.asList(
-                "", "", "", "", "", "", "", "", "", ""));
-        ArrayList<Integer> field_not_defined = new ArrayList<>(Arrays.asList(
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+        ArrayList<String> person_list = new ArrayList<>(10);
+        ArrayList<Integer> field_not_defined = (ArrayList<Integer>) IntStream.rangeClosed(0, 9).boxed().collect(Collectors.toList());
         if (arguments[0].length() != 0) {
             for (int i = 0; i != arguments.length; i++) {
                 if (i > 10) {

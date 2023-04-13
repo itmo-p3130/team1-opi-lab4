@@ -25,38 +25,39 @@ public class command_update implements command {
         Long num = null;
         try {
             num = Long.parseLong(buffer);
-        } catch (Exception e) {
-            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение "+ buffer +
-             " не распознано. Вводите значение типа Long."));
-             sendAwake();
-             return;
-        }
-        if(num != null){
-            Person person = null;
-            for(Person pers : conveyor.data){
-                if(num == pers.getID_long()){
-                  person = pers;  
+            if (num != null) {
+                Person person = null;
+                for (Person pers : conveyor.data) {
+                    if (num == pers.getID_long()) {
+                        person = pers;
+                    }
                 }
-            }
-            try {
-                conveyor.answer.add(new Answer(command_condition.finished, "Объект ("+num+") с полями: "+ person.toString() +
-                 " БУДЕТ ПЕРЕСОЗДАН."));
+                conveyor.answer.add(
+                        new Answer(command_condition.finished, "Объект (" + num + ") с полями: " + person.toString() +
+                                " БУДЕТ ПЕРЕСОЗДАН."));
                 sendAwake();
-                conveyor.cmdready.add(1,new command_add(conveyor, conditor, answer_conditor));
-                conveyor.comm_buff.add(1, new ArrayList<>(Arrays.asList("\0u",person.getID())));
-            } catch (Exception e) {
-                conveyor.answer.add(new Answer(command_condition.finished, "Объект ("+num+") не был найден."));
-                sendAwake();
+                conveyor.cmdready.add(1, new command_add(conveyor, conditor, answer_conditor));
+                conveyor.comm_buff.add(1, new ArrayList<>(Arrays.asList("\0u", person.getID())));
             }
-            
+        } catch (NumberFormatException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение " + buffer +
+                    " не распознано. Вводите значение типа Long."));
+            sendAwake();
+        } catch (NullPointerException e) {
+            conveyor.answer.add(new Answer(command_condition.finished, "Объект (" + num + ") не был найден."));
+            sendAwake();
         }
-        if(conveyor.comm_buff.size()>1){
+
+        if (conveyor.comm_buff.size() > 1) {
             this.repeat();
             return;
         }
     };
 
     public void repeat() {
+        conveyor.comm_buff.get(0).remove(0);
+        conveyor.comm_buff.get(0).add("");
+        this.execute();
     };
 
     public void set_next_command(command com) {

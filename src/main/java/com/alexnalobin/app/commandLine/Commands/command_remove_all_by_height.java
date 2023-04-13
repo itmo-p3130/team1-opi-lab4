@@ -22,26 +22,26 @@ public class command_remove_all_by_height implements command {
         Long num = null;
         try {
             num = Long.parseLong(buffer);
-        } catch (Exception e) {
-            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение "+ buffer +
-             " не распознано. Вводите значение типа Long."));
-             sendAwake();
-             return;
-        }
-        if(num != null){
-            Integer counter = 0;
-            for(Person pers : conveyor.data){
-                Long temp = pers.getHeight();
-                if(num == temp){
-                    conveyor.data.remove(pers);
-                    counter +=1;
+            if (num != null) {
+                Integer counter = 0;
+                for (Person pers : conveyor.data) {
+                    Long temp = pers.getHeight();
+                    if (num == temp) {
+                        conveyor.data.remove(pers);
+                        counter += 1;
+                    }
                 }
+                conveyor.answer.add(new Answer(command_condition.finished, "Удалено элементов: " + counter));
+                sendAwake();
             }
-            conveyor.answer.add(new Answer(command_condition.finished, "Удалено элементов: "+ counter));
+            if (conveyor.comm_buff.size() > 1) {
+                this.repeat();
+                return;
+            }
+        } catch (NumberFormatException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение " + buffer +
+                    " не распознано. Вводите значение типа Long."));
             sendAwake();
-        }
-        if(conveyor.comm_buff.size()>1){
-            this.repeat();
             return;
         }
     };

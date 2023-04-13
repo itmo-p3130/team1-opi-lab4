@@ -28,44 +28,45 @@ public class command_save implements command {
         String path_to_file = conveyor.path_to_collection;
         FileOutputStream outputStream;
         CSVWriter writer;
-
-        if(path_to_file!=null ){
-            if(path_to_file.length()!=0){
-            try {
-                outputStream = new FileOutputStream(path_to_file);
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
-                writer = new CSVWriter(new OutputStreamWriter(bufferedOutputStream));
-                String[] infoStrng = { conveyor.csv_core_author, conveyor.csv_date_initialization,
-                        conveyor.csv_collection_author, conveyor.csv_collection_type };
-                writer.writeNext(infoStrng, false);
-                writer.flush();
-                for (Person person : conveyor.data) {
-                    String[] dataString = person.getCSV();
-                    System.err.println(dataString);
-                    writer.writeNext(dataString, false);
+        try {
+            if (path_to_file != null) {
+                if (path_to_file.length() != 0) {
+                    outputStream = new FileOutputStream(path_to_file);
+                    BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+                    writer = new CSVWriter(new OutputStreamWriter(bufferedOutputStream));
+                    String[] infoStrng = { conveyor.csv_core_author, conveyor.csv_date_initialization,
+                            conveyor.csv_collection_author, conveyor.csv_collection_type };
+                    writer.writeNext(infoStrng, false);
                     writer.flush();
+                    for (Person person : conveyor.data) {
+                        String[] dataString = person.getCSV();
+                        System.err.println(dataString);
+                        writer.writeNext(dataString, false);
+                        writer.flush();
+                    }
+                    writer.close();
+                    conveyor.answer.add(new Answer(command_condition.finished,
+                            "Коллекция успешно сохранена в:" + path_to_file));
+                    sendAwake();
                 }
-                System.err.println(path_to_file);
-                writer.close();
-                conveyor.answer.add(new Answer(command_condition.finished,
-                        "Коллекция успешно сохранена в:" + path_to_file));
-                sendAwake();
-            } catch (FileNotFoundException e) {
+            } else {
                 conveyor.answer.add(new Answer(command_condition.critical_error,
-                        "This file doesn't exist(please input \"argument\" command):" + path_to_file));
-                sendAwake();
-            } catch (IOException e) {
-                conveyor.answer.add(new Answer(command_condition.critical_error,
-                        "There is some problem with CSVWriter:" + path_to_file));
-                sendAwake();
-            }
-        }
-
-    }else{
-        conveyor.answer.add(new Answer(command_condition.critical_error,
                         "Путь к коллекции не указан, чтобы указать файл с коллекцией введите команду argument {path}."));
                 sendAwake();
-    }
+            }
+        } catch (FileNotFoundException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error,
+                    "This file doesn't exist(please input \"argument\" command):" + path_to_file));
+            sendAwake();
+        } catch (IOException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error,
+                    "There is some problem with CSVWriter:" + path_to_file));
+            sendAwake();
+        } catch (SecurityException e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error,
+                    "Seems we don't have access to this file:" + path_to_file));
+            sendAwake();
+        }
     }
 
     public void repeat() {

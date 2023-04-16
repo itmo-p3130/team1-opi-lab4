@@ -39,7 +39,7 @@ public class command_argument implements command {
 
     public void execute() {
         String[] arguments = conveyor.comm_buff.get(0).toArray(new String[0]);
-        if(arguments[0]==null){
+        if (arguments[0] == null) {
             Answer answ = new Answer(command_condition.waiting_for_input,
                     "Аргумент строки не указан. Коллекция не загружена. ");
             conveyor.answer.add(answ);
@@ -71,41 +71,40 @@ public class command_argument implements command {
                     try (CSVReader csvReader = new CSVReader(reader)) {
                         csvFile_initData = csvReader.readNext();
                         if (csvFile_initData.length == 4) {
-                                conveyor.csv_core_author = csvFile_initData[0];
-                                conveyor.csv_date_initialization = csvFile_initData[1];
-                                conveyor.csv_collection_author = csvFile_initData[2];
-                                conveyor.csv_collection_type = csvFile_initData[3];
-                                conveyor.path_to_collection = path_to_file;
+                            conveyor.csv_core_author = csvFile_initData[0];
+                            conveyor.csv_date_initialization = csvFile_initData[1];
+                            conveyor.csv_collection_author = csvFile_initData[2];
+                            conveyor.csv_collection_type = csvFile_initData[3];
+                            conveyor.path_to_collection = path_to_file;
 
-                                String[] nextLine;
-                                while ((nextLine = csvReader.readNext()) != null) {
-                                    conveyor.answer.add(new Answer(command_condition.working,
-                                            "Adding data with id(" + nextLine[0] + ")."));
-                                    // for(int i = 0; i!=nextLine.length;i++){
-                                    // System.err.println(i+" : "+nextLine[i]);
-                                    // }
-                                    Person person = new Person(new ArrayList<String>(Arrays.asList(nextLine[1],
-                                            nextLine[2], nextLine[3], nextLine[5], nextLine[6], nextLine[7],
-                                            nextLine[8], nextLine[9], nextLine[10], nextLine[11],
-                                            "" + nextLine[7].hashCode(),
-                                            nextLine[4])));
+                            String[] nextLine;
+                            while ((nextLine = csvReader.readNext()) != null) {
+                                conveyor.answer.add(new Answer(command_condition.working,
+                                        "Adding data with id(" + nextLine[0] + ")."));
+                                // for(int i = 0; i!=nextLine.length;i++){
+                                // System.err.println(i+" : "+nextLine[i]);
+                                // }
+                                Person person = new Person(new ArrayList<String>(Arrays.asList(nextLine[1],
+                                        nextLine[2], nextLine[3], nextLine[5], nextLine[6], nextLine[7],
+                                        nextLine[8], nextLine[9], nextLine[10], nextLine[11],
+                                        "" + nextLine[7].hashCode(),
+                                        nextLine[4])));
 
-                                    conveyor.data.add(person);
-                                }
-                                conveyor.answer.add(new Answer(command_condition.critical_error,
-                                        "Collection initialized successfully : "
-                                                + path_to_file));
-                                sendAwake();
+                                conveyor.data.add(person);
                             }
-                        else {
+                            conveyor.answer.add(new Answer(command_condition.critical_error,
+                                    "Collection initialized successfully : "
+                                            + path_to_file));
+                            sendAwake();
+                        } else {
                             conveyor.answer.add(new Answer(command_condition.critical_error,
                                     "Probably an unsupported file-collection type is being used at: "
                                             + path_to_file));
                             this.repeat();
                             return;
                         }
-                } 
-            }catch (Exception e) {
+                    }
+                } catch (Exception e) {
                     conveyor.answer.add(new Answer(command_condition.critical_error,
                             "Some problem with file at path: " + path_to_file + " \n" + e));
                     this.repeat();
@@ -151,14 +150,14 @@ public class command_argument implements command {
                 }
                 return;
             }
-        }catch (SecurityException e) {
+        } catch (SecurityException e) {
             conveyor.answer.add(new Answer(command_condition.critical_error,
                     "Seems we don't have access to this file:" + path_to_file + " \n" + e));
             this.repeat();
             return;
 
         }
-        };
+    };
 
     public void repeat() {
         sendAwake();

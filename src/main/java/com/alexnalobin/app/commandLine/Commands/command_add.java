@@ -52,7 +52,6 @@ public class command_add implements command {
                 }
             }
             sendAwake();
-
         }
         boolean need_checking = false;
         for (Integer field_id : field_not_defined) {

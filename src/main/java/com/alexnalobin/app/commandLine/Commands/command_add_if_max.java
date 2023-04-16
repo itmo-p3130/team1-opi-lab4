@@ -26,28 +26,28 @@ public class command_add_if_max implements command {
         Long num = null;
         try {
             num = Long.parseLong(buffer);
-        } catch (Exception e) {
-            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение "+ buffer +
-             " не распознано. Вводите значение типа Long."));
-             sendAwake();
-             return;
-        }
-        if(num != null){
-            boolean is_max = true;
-            for(Person pers : conveyor.data){
-                if(num <= pers.getWeight()){
-                    is_max = false;
-                    break;
+            if (num != null) {
+                boolean is_max = true;
+                for (Person pers : conveyor.data) {
+                    if (num <= pers.getWeight()) {
+                        is_max = false;
+                        break;
+                    }
+                }
+                if (is_max) {
+                    conveyor.cmdready.add(1, new command_add(conveyor, conditor, answer_conditor));
+                    conveyor.comm_buff.add(1, new ArrayList<String>(Arrays.asList("")));
+                } else {
+                    conveyor.answer
+                            .add(new Answer(command_condition.finished, "Значение " + num + " не самое большое."));
+                    sendAwake();
                 }
             }
-            if(is_max){
-                conveyor.cmdready.add(1,new command_add(conveyor, conditor, answer_conditor));
-                conveyor.comm_buff.add(1,new ArrayList<String>(Arrays.asList("")));
-            }
-            else {
-                conveyor.answer.add(new Answer(command_condition.finished, "Значение "+ num + " не самое большое."));
-                sendAwake();
-            }
+        } catch (Exception e) {
+            conveyor.answer.add(new Answer(command_condition.critical_error, "Значение " + buffer +
+                    " не распознано. Вводите значение типа Long."));
+            sendAwake();
+            return;
         }
     };
 

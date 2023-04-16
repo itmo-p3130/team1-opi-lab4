@@ -9,7 +9,6 @@ import jakarta.websocket.OnOpen;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 
-import com.alexnalobin.app.commandLine.*;
 import com.alexnalobin.app.App;
 
 import java.util.*;
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/websocket/console")
 public class webConsole {
-    public static Map<Session, App> allSessions = new ConcurrentHashMap<Session, App>();
+    public Map<Session, App> allSessions = new ConcurrentHashMap<Session, App>();
     @OnMessage
     public void message(String name,Session session) {
         name = name.replaceFirst("^[ \t]+", "");

@@ -1,13 +1,11 @@
 package com.alexnalobin.app.commandLine;
 import com.alexnalobin.app.commandLine.Commands.*;
 import com.alexnalobin.app.dataStruct.Answer;
-import com.alexnalobin.app.dataStruct.Person;
 import com.alexnalobin.app.dataStruct.command_condition;
 
 import jakarta.websocket.Session;
 
 import java.util.*;
-import java.util.concurrent.locks.*;
 
 public class Commander extends Thread {
     private final String name;

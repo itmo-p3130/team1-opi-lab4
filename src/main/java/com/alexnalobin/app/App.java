@@ -5,8 +5,6 @@ import com.alexnalobin.app.commandLine.Conveyor;
 
 import jakarta.websocket.Session;
 
-
-
 public class App extends Thread{
     //863205
     Session session;
@@ -38,15 +36,6 @@ public class App extends Thread{
         conv.comm.add(promt);
         synchronized (condition){
             condition.notifyAll();
-        }
-
-        // try {
-        //     session.getBasicRemote().sendText(String.valueOf(conv.comm.size()));
-        // } catch (Exception e) {
-        //     // TODO: handle exception
-        //     System.err.print(e);
-        // }
-        
+        }      
     }
-
 }

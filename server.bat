@@ -1,3 +1,2 @@
 cd ./server
-mvn wildfly:run
-cd ..
+mvn clean install wildfly:run

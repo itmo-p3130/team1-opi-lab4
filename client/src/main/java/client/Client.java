@@ -5,12 +5,14 @@ import java.net.Socket;
 import java.util.Scanner;
 import javax.swing.*;
 
+import client.cardsWindow.ColoredSquare;
 import client.ipWindow.IpWindow;
 
 public class Client {
     static public void main(String[] args) {
-        IpWindow ip = new IpWindow();
-        
+        //pWindow ip = new IpWindow();
+        ColoredSquare sq = new ColoredSquare();
+        while(true){}
         // int port;
         // Scanner in = new Scanner(System.in);
         // port = in.nextInt();

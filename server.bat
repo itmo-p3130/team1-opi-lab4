@@ -1,2 +1,2 @@
-cd ./server
+cd ./Server
 mvn clean install wildfly:run

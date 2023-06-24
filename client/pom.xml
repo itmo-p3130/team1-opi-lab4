@@ -12,7 +12,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 	<!-- client info -->
-    <artifactId>client</artifactId>
+    <artifactId>Client</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
     <name>Client</name>

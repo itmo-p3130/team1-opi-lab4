@@ -1,3 +1,3 @@
-cd ./client
-mvn exec:java
+cd ./Client
+mvn install exec:java
 cd ..

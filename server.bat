@@ -1,2 +1,3 @@
 cd ./server
-mvn clean install wildfly:run
+@REM mvn clean install wildfly:run
+gradle run

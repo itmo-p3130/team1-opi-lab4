@@ -1,0 +1,8 @@
+version = '1.0.0'
+
+allprojects{
+    apply plugin: 'java'
+    apply plugin: 'application'
+    targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_17
+}

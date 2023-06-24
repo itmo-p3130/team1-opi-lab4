@@ -1,3 +1,4 @@
 cd ./client
-mvn exec:java
+@REM mvn exec:java
+gradle run
 cd ..

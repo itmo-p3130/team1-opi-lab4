@@ -8,3 +8,6 @@
 target
 /client/target
 /server/target
+/buildSrc
+/plugins
+/Client/src/main/resources/

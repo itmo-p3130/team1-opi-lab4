@@ -11,3 +11,4 @@ target
 /buildSrc
 /plugins
 /Client/src/main/resources/
+gradlew

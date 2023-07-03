@@ -6,10 +6,12 @@ import java.util.Scanner;
 import javax.swing.*;
 
 import client.ipWindow.IpWindow;
+import client.cardWindow.CardWindow;
 
 public class Client {
     static public void main(String[] args) {
         IpWindow ip = new IpWindow();
+        CardWindow win = new CardWindow();
         
         // int port;
         // Scanner in = new Scanner(System.in);

@@ -9,8 +9,9 @@ import client.ipWindow.IpWindow;
 import client.cardWindow.CardWindow;
 
 public class Client {
+    //FOR MACOS NEED -XstartOnFirstThread AT JVM
     static public void main(String[] args) {
-        IpWindow ip = new IpWindow();
+        //IpWindow ip = new IpWindow();
         CardWindow win = new CardWindow();
         
         // int port;

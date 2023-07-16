@@ -12,3 +12,4 @@ target
 /plugins
 /Client/src/main/resources/
 gradlew
+/Client/Resources

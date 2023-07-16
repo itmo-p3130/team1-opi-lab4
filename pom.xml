@@ -23,7 +23,7 @@
         <module>client</module>
     </modules>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>jboss-public-maven-repository</id>
             <name>JBoss Public Maven Repository</name>
@@ -119,5 +119,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-  </build>
+  </build> -->
 </project>

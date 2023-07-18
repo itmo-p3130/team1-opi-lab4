@@ -31,6 +31,7 @@ public class CardWindow {
     private Vector<Animation> animations;
 
     private Vector<Vector2f> positions;
+
     public CardWindow() {
         init();
         System.out.println(view.getCenter()); // 500-500
@@ -39,7 +40,7 @@ public class CardWindow {
 
         for (int i = 0; i != cards.size(); i++) {
             animations.add(new Animation(cards.get(i), 3, new EaseOutQuart(), (card, frame) -> {
-                card.getSprite().setRotation(frame * (float) (2*360));
+                card.getSprite().setRotation(frame * (float) (2 * 360));
             }));
         }
         // for (int i = 0; i!=cards.size();i++){
@@ -60,24 +61,33 @@ public class CardWindow {
             }
             Vector<Animation> animends = new Vector<>();
             for (int i = 0; i != animations.size(); i++) {
-                if(animations.elementAt(i).play(dSeconds)){
+                if (animations.elementAt(i).play(dSeconds)) {
                     animends.add(animations.elementAt(i));
                 }
             }
-            for (Animation anim : animends){
+            for (Animation anim : animends) {
                 animations.remove(anim);
             }
             window.display();
-            
-
             for (org.jsfml.window.event.Event event : window.pollEvents()) {
-                if (event.type == org.jsfml.window.event.Event.Type.CLOSED) {
-                    window.close();
-                }
-                if (event.type == org.jsfml.window.event.MouseEvent.Type.MOUSE_BUTTON_PRESSED) {
-                    windowPos = Mouse.getPosition(window);
-                    worldPos = window.mapPixelToCoords(windowPos);
-                    System.out.println(worldPos);
+                switch (event.type) {
+                    case CLOSED -> {
+                        window.close();
+                        break;
+                    }
+                    case KEY_PRESSED -> {
+                        org.jsfml.window.event.KeyEvent keyEvent = event.asKeyEvent();
+                        switch (keyEvent.key) {
+                            case ESCAPE:
+                                window.close();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    default -> {
+                        break;
+                    }
                 }
             }
         }
@@ -122,13 +132,19 @@ public class CardWindow {
             for (int i = 0; i != 13; i++) {
                 for (int j = 0; j != 4; j++) {
                     sprite.setTextureRect(new IntRect(30 + 390 * i, 30 + 568 * j, 360, 538));
-                    //sprite.setPosition(15 * i * 2 + 120 * j * 2, i * 57);
+                    // sprite.setPosition(15 * i * 2 + 120 * j * 2, i * 57);
                     sprite.setScale(0.5f, 0.5f);
                     cards.add(new Card(sprite, CardNum.fromId(i), CardSuit.fromId(j)));
                     sprite = new Sprite(textureCards);
                 }
             }
-
+            imageCards = new Image();
+            imageCards.loadFromFile(Paths.get("Resources/Card_back.png"));
+            textureCards = new Texture();
+            textureCards.loadFromImage(imageCards);
+            sprite.setTexture(textureCards);
+            cards.add(new Card(sprite, CardNum.Back, CardSuit.Back));
+            // imageCards.createMaskFromColor(new Color(85, 170, 85, 255));
         } catch (IOException | TextureCreationException e) {
             throw new RuntimeException(e);
         }
@@ -157,20 +173,20 @@ public class CardWindow {
         return screenSize;
     }
 
-    private void initPlayersPoses(int count){
+    private void initPlayersPoses(int count) {
         positions = new Vector<>();
-        for (int i = 0; i!=count;i++){
-            double c = Math.cos((float)Math.PI*2/count*i - (float)Math.PI/2);
-            double s = Math.sin((float)Math.PI*2/count*i - (float)Math.PI/2);
+        for (int i = 0; i != count; i++) {
+            double c = Math.cos((float) Math.PI * 2 / count * i - (float) Math.PI / 2);
+            double s = Math.sin((float) Math.PI * 2 / count * i - (float) Math.PI / 2);
             Vector2f vecCen = view.getCenter();
             c = c * 30 + vecCen.x;
             s = s * 30 + vecCen.y;
             System.out.println(c + "  " + s);
-            this.positions.add(new Vector2f((float)c,(float)s));
+            this.positions.add(new Vector2f((float) c, (float) s));
         }
     }
 
     private Card getCard(CardNum crdNum, CardSuit crdSuit) {
-        return this.cards.elementAt(CardNum.fromName(crdNum)*4+CardSuit.fromName(crdSuit));
+        return this.cards.elementAt(CardNum.fromName(crdNum) * 4 + CardSuit.fromName(crdSuit));
     }
 }

@@ -4,7 +4,8 @@ public enum CardSuit {
     Hearts(0),
     Tiles(1),
     Clovers(2),
-    Spades(3);
+    Spades(3),
+    Back(4);
     public final int id;
     CardSuit(int id){
         this.id = id;

@@ -13,8 +13,7 @@ public enum CardNum {
     Ten(9),
     Jack(10),
     Queen(11),
-    King(12),
-    Back(13);
+    King(12);
     public final int id;
     CardNum(int id){
         this.id = id;

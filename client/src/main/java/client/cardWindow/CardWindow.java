@@ -9,14 +9,19 @@ import org.jsfml.graphics.*;
 import org.jsfml.graphics.Color;
 import org.jsfml.graphics.Image;
 import org.jsfml.system.*;
+import org.jsfml.window.Context;
+import org.jsfml.window.ContextSettings;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.VideoMode;
+import org.jsfml.window.WindowStyle;
 
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Random;
 import java.util.Vector;
+
+import javax.swing.text.Style;
 
 public class CardWindow {
     public RenderWindow window;
@@ -59,6 +64,7 @@ public class CardWindow {
             for (int i = 0; i != 13 * 4; i++) {
                 cards.elementAt(i).draw(window);
             }
+            getBackCard().draw(window);
             Vector<Animation> animends = new Vector<>();
             for (int i = 0; i != animations.size(); i++) {
                 if (animations.elementAt(i).play(dSeconds)) {
@@ -140,10 +146,13 @@ public class CardWindow {
             }
             imageCards = new Image();
             imageCards.loadFromFile(Paths.get("Resources/Card_back.png"));
+            imageCards.createMaskFromColor(new Color(85, 170, 85, 255));
             textureCards = new Texture();
             textureCards.loadFromImage(imageCards);
             sprite.setTexture(textureCards);
-            cards.add(new Card(sprite, CardNum.Back, CardSuit.Back));
+            sprite.setTextureRect(new IntRect(84,39,738,1029));
+            sprite.setScale(0.248f,0.265f);
+            cards.add(new Card(sprite, CardNum.Ace, CardSuit.Clovers));
             // imageCards.createMaskFromColor(new Color(85, 170, 85, 255));
         } catch (IOException | TextureCreationException e) {
             throw new RuntimeException(e);
@@ -153,7 +162,9 @@ public class CardWindow {
     private void initWindowAndView() {
         screenSize = this.getScreenSize();
         int size = (int) screenSize.x / 2;
-        window = new RenderWindow(new VideoMode(size, size / 4 * 3), "Cards Online");
+        ContextSettings context = new ContextSettings(8,8,16);
+        window = new RenderWindow(new VideoMode(size, size / 4 * 3), "Cards Online", WindowStyle.DEFAULT, context);
+        window.setVerticalSyncEnabled(true);
         view = (View) window.getDefaultView();
         view.setSize(640 * 2, 480 * 2);
         view.setCenter(320 * 2, 240 * 2);
@@ -188,5 +199,8 @@ public class CardWindow {
 
     private Card getCard(CardNum crdNum, CardSuit crdSuit) {
         return this.cards.elementAt(CardNum.fromName(crdNum) * 4 + CardSuit.fromName(crdSuit));
+    }
+    private Card getBackCard() {
+        return this.cards.elementAt(cards.size()-1);
     }
 }

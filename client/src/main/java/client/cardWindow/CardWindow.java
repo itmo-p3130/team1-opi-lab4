@@ -79,7 +79,7 @@ public class CardWindow {
             // for (int i = 0; i != 13 * 4; i++) {
             // cards.elementAt(i).draw(window);
             // }
-            for(Player p : players){
+            for (Player p : players) {
                 p.drawCards(window);
             }
             Vector<Animation> animends = new Vector<>();

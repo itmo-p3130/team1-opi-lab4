@@ -13,3 +13,6 @@ target
 /Client/src/main/resources/
 gradlew
 /Client/Resources
+*/lib
+*~
+.vscode

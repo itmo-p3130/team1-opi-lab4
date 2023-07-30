@@ -8,4 +8,12 @@ public class Request {
         this.initialization = init;
         this.data = content;
     }
+
+    public String getData() {
+        return this.data;
+    }
+
+    public Integer getInitialization() {
+        return this.initialization;
+    }
 }

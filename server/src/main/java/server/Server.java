@@ -1,7 +1,9 @@
 package server;
 
+import server.confirmer.Confirmer;
+
 public class Server {
     static public void main(String[] args) {
-        System.out.println(args);
+        Confirmer.getToken();
     }
 }

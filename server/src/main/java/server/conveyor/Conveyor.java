@@ -4,12 +4,11 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.esotericsoftware.kryonet.Client;
-
+import server.user.User;
 import server.session.Session;
 
 public class Conveyor {
-    public final ConcurrentHashMap<UUID, Client> clients;
+    public final ConcurrentHashMap<UUID, User> clients;
     public final ConcurrentHashMap<Integer, Session> sessions;
     public final Vector<Request> requests;
 

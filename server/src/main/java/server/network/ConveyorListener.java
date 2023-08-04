@@ -14,7 +14,6 @@ public class ConveyorListener extends Listener {
     }
 
     public void connected(Connection connection) {
-        System.out.println(conveyor.clients);
     }
 
     public void disconnected(Connection connection) {

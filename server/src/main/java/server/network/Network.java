@@ -10,7 +10,6 @@ import com.esotericsoftware.kryonet.Server;
 
 import server.confirmer.Confirmer;
 import server.conveyor.Conveyor;
-import server.conveyor.Request;
 import server.user.User;
 
 public class Network extends Thread {
@@ -38,9 +37,22 @@ public class Network extends Thread {
         this.server.addListener(new ConveyorListener(this.conveyor) {
 
             public void connected(Connection con) {
-                UUID uid = Confirmer.getToken();
-                conveyor.clients.put(uid, new User(con.getRemoteAddressTCP().toString(), uid, con));
-                System.out.println(conveyor.clients);
+                conveyor.connections.put(con, UUID.randomUUID());
+            }
+
+            public void received(Connection con, Object obj) {
+                if (obj instanceof Request) {
+                    Request req = (Request) obj;
+                    conveyor.requests.add(req);
+                }
+            }
+
+            public void disconnected(Connection con) {
+                conveyor.connections.remove(con);
+            }
+
+            public void idle(Connection con) {
+
             }
 
         });

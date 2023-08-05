@@ -46,11 +46,10 @@ public class Commander extends Thread {
                 UUID uuid = req.getInitialization();
                 User player = conveyor.clients.get(uuid);
                 if (player == null) {
-                    Request response = new Request(req.getInitialization());
-                    response.setType(RequestConstants.initGameSession);
-                    response.setData(RequestConstants.status, RequestConstants.failed);
-                    response.setData(RequestConstants.reason, "Could'n find your ID");
-                    conveyor.responses.add(response);
+                    Request response = addFields(req.getInitialization(), RequestConstants.initGameSession,
+                            RequestConstants.status, RequestConstants.failed, RequestConstants.reason,
+                            "Could'n find your ID");
+                    addResponse(response);
                     return;
                 }
                 Object gameSessionName = req.getData("--Game-Session-Name");
@@ -58,28 +57,25 @@ public class Commander extends Thread {
                 if (gameSessionName instanceof String) {
                     sessionName = (String) gameSessionName;
                 } else {
-                    Request response = new Request(req.getInitialization());
-                    response.setType(RequestConstants.initGameSession);
-                    response.setData(RequestConstants.status, RequestConstants.failed);
-                    response.setData(RequestConstants.reason, "Couldn't parse game session name");
-                    conveyor.responses.add(response);
+                    Request response = addFields(req.getInitialization(), RequestConstants.initGameSession,
+                            RequestConstants.status, RequestConstants.failed, RequestConstants.reason,
+                            "Couldn't parse game session name");
+                    addResponse(response);
                     return;
                 }
                 if (conveyor.sessions.contains(sessionName)) {
-                    Request response = new Request(req.getInitialization());
-                    response.setType(RequestConstants.initGameSession);
-                    response.setData(RequestConstants.status, RequestConstants.failed);
-                    response.setData(RequestConstants.reason, "There is already a session with that name");
-                    conveyor.responses.add(response);
+                    Request response = addFields(req.getInitialization(), RequestConstants.initGameSession,
+                            RequestConstants.status, RequestConstants.failed, RequestConstants.reason,
+                            "There is already a session with that name");
+                    addResponse(response);
                     return;
                 }
                 Session session = new Session(sessionName);
                 session.addPlayer(player);
                 conveyor.sessions.put(sessionName, session);
-                Request response = new Request(req.getInitialization());
-                response.setType(RequestConstants.initGameSession);
-                response.setData(RequestConstants.status, RequestConstants.succes);
-                conveyor.responses.add(response);
+                Request response = addFields(req.getInitialization(), RequestConstants.initGameSession,
+                        RequestConstants.status, RequestConstants.success);
+                addResponse(response);
             }
             case RequestConstants.connectToGameSession -> {
 
@@ -97,5 +93,18 @@ public class Commander extends Thread {
 
             }
         }
+    }
+
+    private void addResponse(Request req) {
+        conveyor.responses.add(req);
+    }
+
+    private Request addFields(UUID uid, String type, String... fields) {
+        Request request = new Request(uid);
+        request.setType(type);
+        for (int i = 0; i <= fields.length - 1; i += 2) {
+            request.addData(fields[i], fields[i + 1]);
+        }
+        return request;
     }
 }

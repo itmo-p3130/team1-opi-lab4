@@ -12,13 +12,18 @@ import server.session.Session;
 
 public class Conveyor {
     public final ConcurrentHashMap<UUID, User> clients;
-    public final ConcurrentHashMap<Integer, Session> sessions;
+    public final ConcurrentHashMap<String, Session> sessions;
     public final ConcurrentHashMap<Connection, UUID> connections;
     public final Vector<Request> requests;
+    public final Vector<Request> responses;
+    public Boolean isWorking;
 
     public Conveyor() {
         this.clients = new ConcurrentHashMap<>();
         this.sessions = new ConcurrentHashMap<>();
+        this.connections = new ConcurrentHashMap<>();
         this.requests = new Vector<>();
+        this.responses = new Vector<>();
+        this.isWorking = true;
     }
 }

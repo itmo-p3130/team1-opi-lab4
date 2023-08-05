@@ -2,13 +2,23 @@ package server.session;
 
 import java.util.Vector;
 
-public class Session {
-    private Vector<Integer> players;
-    private Integer id;
+import server.user.User;
 
-    public Session(Integer ID) {
+public class Session {
+    private Vector<User> players;
+    private String name;
+
+    public Session(String name) {
         this.players = new Vector<>();
-        this.id = ID;
+        this.name = name;
+    }
+
+    public void addPlayer(User user) {
+        players.add(user);
+    }
+
+    public String getName() {
+        return this.name;
     }
 
 }

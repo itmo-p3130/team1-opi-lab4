@@ -1,16 +1,12 @@
 package server.network;
 
 import java.io.IOException;
-import java.io.ObjectInputFilter.Config;
 import java.util.UUID;
 
 import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
-import server.confirmer.Confirmer;
 import server.conveyor.Conveyor;
-import server.user.User;
 
 public class Network extends Thread {
     private final Conveyor conveyor;
@@ -35,11 +31,12 @@ public class Network extends Thread {
 
     private void addListeners() {
         this.server.addListener(new ConveyorListener(this.conveyor) {
-
+            @Override
             public void connected(Connection con) {
                 conveyor.connections.put(con, UUID.randomUUID());
             }
 
+            @Override
             public void received(Connection con, Object obj) {
                 if (obj instanceof Request) {
                     Request req = (Request) obj;
@@ -47,10 +44,12 @@ public class Network extends Thread {
                 }
             }
 
+            @Override
             public void disconnected(Connection con) {
                 conveyor.connections.remove(con);
             }
 
+            @Override
             public void idle(Connection con) {
 
             }

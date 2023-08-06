@@ -17,6 +17,10 @@ public class Session {
         players.add(user);
     }
 
+    public Vector<User> getPlayers() {
+        return this.players;
+    }
+
     public String getName() {
         return this.name;
     }

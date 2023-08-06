@@ -119,7 +119,22 @@ public class Commander extends Thread {
                 addResponse(response);
             }
             case RequestConstants.QUIT_FROM_GAME_SESSION -> {
-
+                UUID uuid = req.getInitialization();
+                User player = conveyor.clients.get(uuid);
+                if (player == null) {
+                    Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
+                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                            "Could'n find your ID");
+                    addResponse(response);
+                    return;
+                }
+                Session session = player.getSession();
+                if (session != null) {
+                    session.getPlayers().remove(player);
+                    Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
+                            RequestConstants.STATUS, RequestConstants.SUCCESS);
+                    addResponse(response);
+                }
             }
             case RequestConstants.GET_DATA_FROM_GAME_SESSION -> {
 

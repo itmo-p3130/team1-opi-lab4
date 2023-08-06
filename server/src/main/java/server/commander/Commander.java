@@ -1,6 +1,5 @@
 package server.commander;
 
-import java.util.Set;
 import java.util.UUID;
 
 import server.confirmer.Confirmer;
@@ -49,7 +48,7 @@ public class Commander extends Thread {
                 if (player == null) {
                     Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
                             RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "Could'n find your ID");
+                            RequestConstants.COULDNT_FIND_YOUR_ID);
                     addResponse(response);
                     return;
                 }
@@ -84,7 +83,7 @@ public class Commander extends Thread {
                 if (player == null) {
                     Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
                             RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "Could'n find your ID");
+                            RequestConstants.COULDNT_FIND_YOUR_ID);
                     addResponse(response);
                     return;
                 }
@@ -124,7 +123,7 @@ public class Commander extends Thread {
                 if (player == null) {
                     Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
                             RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "Could'n find your ID");
+                            RequestConstants.COULDNT_FIND_YOUR_ID);
                     addResponse(response);
                     return;
                 }
@@ -135,6 +134,7 @@ public class Commander extends Thread {
                             RequestConstants.STATUS, RequestConstants.SUCCESS);
                     addResponse(response);
                 }
+                player.setSession(null);
             }
             case RequestConstants.GET_DATA_FROM_GAME_SESSION -> {
 

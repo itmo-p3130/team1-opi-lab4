@@ -49,10 +49,10 @@ public class Commander extends Thread {
                 quitFromGameSession(req);
             }
             case RequestConstants.GET_DATA_FROM_GAME_SESSION -> {
-
+                getDataFromGameSession(req);
             }
             case RequestConstants.SET_DATA_TO_GAME_SESSION -> {
-
+                setDataToGameSession(req);
             }
             default -> {
 
@@ -175,5 +175,31 @@ public class Commander extends Thread {
             addResponse(response);
         }
         player.setSession(null);
+    }
+
+    private void getDataFromGameSession(Request req) {
+        UUID uuid = req.getInitialization();
+        User player = conveyor.clients.get(uuid);
+        if (player == null) {
+            Request response = addFields(req.getInitialization(), RequestConstants.GET_DATA_FROM_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    RequestConstants.COULDNT_FIND_YOUR_ID);
+            addResponse(response);
+            return;
+        }
+        Session session = player.getSession();
+        if (session != null) {
+            session.getPlayers().remove(player);
+            Request response = addFields(req.getInitialization(), RequestConstants.GET_DATA_FROM_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "This session doesn't exist");
+            addResponse(response);
+            return;
+        }
+        session.addRequest(req);
+    }
+
+    private void setDataToGameSession(Request req) {
+
     }
 }

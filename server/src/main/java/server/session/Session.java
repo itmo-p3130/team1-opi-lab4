@@ -2,10 +2,12 @@ package server.session;
 
 import java.util.Vector;
 
+import server.network.Request;
 import server.user.User;
 
 public class Session {
     private Vector<User> players;
+    private Vector<Request> requests;
     private String name;
 
     public Session(String name) {
@@ -23,6 +25,10 @@ public class Session {
 
     public String getName() {
         return this.name;
+    }
+
+    public void addRequest(Request req) {
+        requests.add(req);
     }
 
 }

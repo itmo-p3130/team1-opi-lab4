@@ -37,104 +37,16 @@ public class Commander extends Thread {
         String type = req.getType();
         switch (type) {
             case RequestConstants.UUID_REGISTRATION -> {
-                UUID uid = Confirmer.getToken();
-                User user = new User(uid, req.getConnection());
-                conveyor.connections.put(req.getConnection(), uid);
-                conveyor.clients.put(uid, user);
+                uuidRegistration(req);
             }
             case RequestConstants.INIT_GAME_SESSION -> {
-                UUID uuid = req.getInitialization();
-                User player = conveyor.clients.get(uuid);
-                if (player == null) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            RequestConstants.COULDNT_FIND_YOUR_ID);
-                    addResponse(response);
-                    return;
-                }
-                Object gameSessionName = req.getData("--Game-Session-Name");
-                String sessionName = "";
-                if (gameSessionName instanceof String) {
-                    sessionName = (String) gameSessionName;
-                } else {
-                    Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "Couldn't parse game session name");
-                    addResponse(response);
-                    return;
-                }
-                if (conveyor.sessions.contains(sessionName)) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "There is already a session with that name");
-                    addResponse(response);
-                    return;
-                }
-                Session session = new Session(sessionName);
-                session.addPlayer(player);
-                conveyor.sessions.put(sessionName, session);
-                Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
-                        RequestConstants.STATUS, RequestConstants.SUCCESS);
-                addResponse(response);
+                initGameSession(req);
             }
             case RequestConstants.CONNECT_TO_GAME_SESSION -> {
-                UUID uuid = req.getInitialization();
-                User player = conveyor.clients.get(uuid);
-                if (player == null) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            RequestConstants.COULDNT_FIND_YOUR_ID);
-                    addResponse(response);
-                    return;
-                }
-                Object gameSessionName = req.getData("--Game-Session-Name");
-                String sessionName = "";
-                if (gameSessionName instanceof String) {
-                    sessionName = (String) gameSessionName;
-                } else {
-                    Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "Couldn't parse game session name");
-                    addResponse(response);
-                    return;
-                }
-                Session session = conveyor.sessions.get(sessionName);
-                if (session == null) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "There is no session with that name");
-                    addResponse(response);
-                    return;
-                } else if (session.getPlayers().size() >= PLAYERS_MAX) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            "There are too many players in this session");
-                    addResponse(response);
-                    return;
-                }
-                session.addPlayer(player);
-                Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
-                        RequestConstants.STATUS, RequestConstants.SUCCESS);
-                addResponse(response);
+                connectToGameSession(req);
             }
             case RequestConstants.QUIT_FROM_GAME_SESSION -> {
-                UUID uuid = req.getInitialization();
-                User player = conveyor.clients.get(uuid);
-                if (player == null) {
-                    Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
-                            RequestConstants.COULDNT_FIND_YOUR_ID);
-                    addResponse(response);
-                    return;
-                }
-                Session session = player.getSession();
-                if (session != null) {
-                    session.getPlayers().remove(player);
-                    Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
-                            RequestConstants.STATUS, RequestConstants.SUCCESS);
-                    addResponse(response);
-                }
-                player.setSession(null);
+                quitFromGameSession(req);
             }
             case RequestConstants.GET_DATA_FROM_GAME_SESSION -> {
 
@@ -159,5 +71,109 @@ public class Commander extends Thread {
             request.addData(fields[i], fields[i + 1]);
         }
         return request;
+    }
+
+    private void uuidRegistration(Request req) {
+        UUID uid = Confirmer.getToken();
+        User user = new User(uid, req.getConnection());
+        conveyor.connections.put(req.getConnection(), uid);
+        conveyor.clients.put(uid, user);
+    }
+
+    private void initGameSession(Request req) {
+        UUID uuid = req.getInitialization();
+        User player = conveyor.clients.get(uuid);
+        if (player == null) {
+            Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    RequestConstants.COULDNT_FIND_YOUR_ID);
+            addResponse(response);
+            return;
+        }
+        Object gameSessionName = req.getData("--Game-Session-Name");
+        String sessionName = "";
+        if (gameSessionName instanceof String) {
+            sessionName = (String) gameSessionName;
+        } else {
+            Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "Couldn't parse game session name");
+            addResponse(response);
+            return;
+        }
+        if (conveyor.sessions.contains(sessionName)) {
+            Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "There is already a session with that name");
+            addResponse(response);
+            return;
+        }
+        Session session = new Session(sessionName);
+        session.addPlayer(player);
+        conveyor.sessions.put(sessionName, session);
+        Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
+                RequestConstants.STATUS, RequestConstants.SUCCESS);
+        addResponse(response);
+    }
+
+    private void connectToGameSession(Request req) {
+        UUID uuid = req.getInitialization();
+        User player = conveyor.clients.get(uuid);
+        if (player == null) {
+            Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    RequestConstants.COULDNT_FIND_YOUR_ID);
+            addResponse(response);
+            return;
+        }
+        Object gameSessionName = req.getData("--Game-Session-Name");
+        String sessionName = "";
+        if (gameSessionName instanceof String) {
+            sessionName = (String) gameSessionName;
+        } else {
+            Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "Couldn't parse game session name");
+            addResponse(response);
+            return;
+        }
+        Session session = conveyor.sessions.get(sessionName);
+        if (session == null) {
+            Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "There is no session with that name");
+            addResponse(response);
+            return;
+        } else if (session.getPlayers().size() >= PLAYERS_MAX) {
+            Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    "There are too many players in this session");
+            addResponse(response);
+            return;
+        }
+        session.addPlayer(player);
+        Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
+                RequestConstants.STATUS, RequestConstants.SUCCESS);
+        addResponse(response);
+    }
+
+    private void quitFromGameSession(Request req) {
+        UUID uuid = req.getInitialization();
+        User player = conveyor.clients.get(uuid);
+        if (player == null) {
+            Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                    RequestConstants.COULDNT_FIND_YOUR_ID);
+            addResponse(response);
+            return;
+        }
+        Session session = player.getSession();
+        if (session != null) {
+            session.getPlayers().remove(player);
+            Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
+                    RequestConstants.STATUS, RequestConstants.SUCCESS);
+            addResponse(response);
+        }
+        player.setSession(null);
     }
 }

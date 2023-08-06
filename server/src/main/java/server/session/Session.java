@@ -31,4 +31,8 @@ public class Session {
         requests.add(req);
     }
 
+    public Vector<Request> getRequests() {
+        return this.requests;
+    }
+
 }

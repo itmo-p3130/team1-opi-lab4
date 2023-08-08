@@ -11,10 +11,10 @@
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>19</maven.compiler.source>
+        <maven.compiler.target>19</maven.compiler.target>
         <maven.test.skip>true</maven.test.skip>
-        <java.version>1.8</java.version>
+        <java.version>19</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -23,7 +23,7 @@
         <module>client</module>
     </modules>
 
-    <repositories>
+    <!-- <repositories>
         <repository>
             <id>jboss-public-maven-repository</id>
             <name>JBoss Public Maven Repository</name>
@@ -119,5 +119,5 @@
         </plugin>
       </plugins>
     </pluginManagement>
-  </build>
+  </build> -->
 </project>

@@ -5,12 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa781e13-b7e1-4831-9b52-3dde425f1e3f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/alexnalobin/app/webConsole/webConsole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/alexnalobin/app/webConsole/webConsole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/AnimFunction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/Animation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseInOutQuint.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseInOutSine.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseOutQuart.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/FastStartFastStop.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/TimelineFunction.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/Card.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/CardNum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/CardSuit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Card.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardNum.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardSuit.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -23,10 +49,62 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "G:/Мой диск/Lab5_CommandClient",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="G:\Мой диск\Lab5_CommandClient\Client\Resources" />
+      <recent name="G:\Мой диск\Lab5_CommandClient\Client" />
+      <recent name="G:\Мой диск\Lab5_CommandClient\Client\src\main" />
+      <recent name="G:\Мой диск\Lab5_CommandClient\Client\src\main\java" />
+      <recent name="G:\Мой диск\Lab5_CommandClient\Client\src" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="client.cardWindow.Animation.TimeLines" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Lab5" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="install" />
+                <option value="exec:java" />
+              </list>
+            </option>
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="G:\Мой диск\Lab5_CommandClient\Client" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
@@ -39,7 +117,20 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1680935079828</updated>
+      <workItem from="1688433684936" duration="4693000" />
+      <workItem from="1688492561407" duration="1593000" />
+      <workItem from="1688740427914" duration="9033000" />
+      <workItem from="1688765131554" duration="10044000" />
+      <workItem from="1688844935331" duration="17576000" />
+      <workItem from="1688926933987" duration="16961000" />
+      <workItem from="1689123300051" duration="3828000" />
+      <workItem from="1689197817095" duration="1940000" />
+      <workItem from="1689291841063" duration="4015000" />
+      <workItem from="1689397269542" duration="11936000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

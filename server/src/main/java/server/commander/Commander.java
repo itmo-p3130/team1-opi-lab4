@@ -55,7 +55,7 @@ public class Commander extends Thread {
                 setDataToGameSession(req);
             }
             default -> {
-
+                defaultRequestType(req);
             }
         }
     }
@@ -178,10 +178,18 @@ public class Commander extends Thread {
     }
 
     private void getDataFromGameSession(Request req) {
+        sendRequestToGameSession(req, RequestConstants.GET_DATA_FROM_GAME_SESSION);
+    }
+
+    private void setDataToGameSession(Request req) {
+        sendRequestToGameSession(req, RequestConstants.SET_DATA_TO_GAME_SESSION);
+    }
+
+    private void sendRequestToGameSession(Request req, RequestConstants reqConst) {
         UUID uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {
-            Request response = addFields(req.getInitialization(), RequestConstants.GET_DATA_FROM_GAME_SESSION,
+            Request response = addFields(req.getInitialization(), reqConst,
                     RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
                     RequestConstants.COULDNT_FIND_YOUR_ID);
             addResponse(response);
@@ -190,7 +198,7 @@ public class Commander extends Thread {
         Session session = player.getSession();
         if (session != null) {
             session.getPlayers().remove(player);
-            Request response = addFields(req.getInitialization(), RequestConstants.GET_DATA_FROM_GAME_SESSION,
+            Request response = addFields(req.getInitialization(), reqConst,
                     RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
                     "This session doesn't exist");
             addResponse(response);
@@ -199,7 +207,11 @@ public class Commander extends Thread {
         session.addRequest(req);
     }
 
-    private void setDataToGameSession(Request req) {
+    private void defaultRequestType(Request req) {
+        Request response = addFields(req.getInitialization(), RequestConstants.ERROR_REQUEST,
+                RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
+                RequestConstants.UNSUPPORTED_REQUEST_FORMAT);
+        addResponse(response);
 
     }
 }

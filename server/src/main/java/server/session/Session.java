@@ -8,11 +8,15 @@ import server.user.User;
 public class Session {
     private Vector<User> players;
     private Vector<Request> requests;
+    private Boolean isPlayNow;
+    private Integer countOfPlayers;
+    private Integer playerTurn;
     private String name;
 
     public Session(String name) {
         this.players = new Vector<>();
         this.name = name;
+        this.isPlayNow = false;
     }
 
     public void addPlayer(User user) {
@@ -33,6 +37,14 @@ public class Session {
 
     public Vector<Request> getRequests() {
         return this.requests;
+    }
+
+    public Boolean isPlayNow() {
+        return this.isPlayNow;
+    }
+
+    public void setIsPlayNow(boolean mk) {
+        this.isPlayNow = mk;
     }
 
 }

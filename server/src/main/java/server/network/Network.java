@@ -23,7 +23,6 @@ public class Network extends Thread {
         try {
             this.server.bind(15000);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         this.server.start();

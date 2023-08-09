@@ -111,6 +111,7 @@ public class Commander extends Thread {
         Session session = new Session(sessionName);
         session.addPlayer(player);
         conveyor.sessions.put(sessionName, session);
+        conveyor.sessions.notifyAll();
         Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
                 RequestConstants.STATUS, RequestConstants.SUCCESS);
         addResponse(response);
@@ -185,7 +186,7 @@ public class Commander extends Thread {
         sendRequestToGameSession(req, RequestConstants.SET_DATA_TO_GAME_SESSION);
     }
 
-    private void sendRequestToGameSession(Request req, RequestConstants reqConst) {
+    private void sendRequestToGameSession(Request req, String reqConst) {
         UUID uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {

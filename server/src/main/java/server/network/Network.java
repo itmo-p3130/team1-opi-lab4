@@ -42,6 +42,7 @@ public class Network extends Thread {
                     req.setConnection(con);
                     con.sendTCP(req);
                     conveyor.requests.add(req);
+                    conveyor.requests.notifyAll();
                 }
             }
 

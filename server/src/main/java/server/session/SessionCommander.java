@@ -27,7 +27,7 @@ public class SessionCommander extends Thread {
     }
 
     private void dodgeSessions() {
-        conveyor.sessions.forEach((k, v) -> handleSession(k, v));
+        conveyor.sessions.forEach(this::handleSession);
     }
 
     private void handleSession(String name, Session session) {

@@ -13,7 +13,7 @@ public class ResponsesCommander extends Thread {
     @Override
     public void run() {
         while (conveyor.isWorking) {
-            if (conveyor.sessions.isEmpty()) {
+            if (conveyor.responses.isEmpty()) {
                 synchronized (conveyor.responses) {
                     try {
                         conveyor.responses.wait();

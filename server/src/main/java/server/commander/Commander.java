@@ -20,7 +20,7 @@ public class Commander extends Thread {
     public void run() {
         while (Boolean.TRUE.equals(conveyor.isWorking)) {
             if (conveyor.requests.isEmpty()) {
-                synchronized (conveyor) {
+                synchronized (conveyor.requests) {
                     try {
                         conveyor.wait();
                     } catch (InterruptedException e) {

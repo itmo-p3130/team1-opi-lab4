@@ -16,7 +16,7 @@ public class SessionCommander extends Thread {
                 synchronized (conveyor.sessions) {
                     try {
                         conveyor.sessions.wait();
-                    } catch (InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

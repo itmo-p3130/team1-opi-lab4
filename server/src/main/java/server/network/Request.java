@@ -11,7 +11,7 @@ public class Request {
     private final UUID initialization;
     private final HashMap<String, Object> mapData;
     private String requestType;
-    private Connection connection;
+    private transient com.esotericsoftware.kryonet.Connection connection;
 
     public Request(UUID init) {
         this.initialization = init;
@@ -51,11 +51,12 @@ public class Request {
         return this.requestType;
     }
 
-    public void setConnection(Connection con) {
+    public void setConnection(com.esotericsoftware.kryonet.Connection con) {
         this.connection = con;
     }
 
-    public Connection getConnection() {
-        return this.connection;
+    public com.esotericsoftware.kryonet.Connection getConnection() {
+        return (com.esotericsoftware.kryonet.Connection) this.connection;
+
     }
 }

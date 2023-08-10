@@ -13,16 +13,16 @@ public class ConveyorListener extends Listener {
         this.conveyor = conv;
     }
 
-    public void connected(Connection connection) {
+    public void connected(com.esotericsoftware.kryonet.Connection connection) {
     }
 
-    public void disconnected(Connection connection) {
+    public void disconnected(com.esotericsoftware.kryonet.Connection connection) {
     }
 
-    public void received(Connection connection, Object object) {
+    public void received(com.esotericsoftware.kryonet.Connection connection, Object object) {
     }
 
-    public void idle(Connection connection) {
+    public void idle(com.esotericsoftware.kryonet.Connection connection) {
     }
 
 }

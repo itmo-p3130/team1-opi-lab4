@@ -31,7 +31,7 @@ public class Network extends Thread {
     private void addListeners() {
         this.server.addListener(new ConveyorListener(this.conveyor) {
             @Override
-            public void connected(Connection con) {
+            public void connected(com.esotericsoftware.kryonet.Connection con) {
                 conveyor.connections.put(con, UUID.randomUUID());
             }
 
@@ -39,17 +39,19 @@ public class Network extends Thread {
             public void received(Connection con, Object obj) {
                 if (obj instanceof Request) {
                     Request req = (Request) obj;
+                    req.setConnection(con);
+                    con.sendTCP(req);
                     conveyor.requests.add(req);
                 }
             }
 
             @Override
-            public void disconnected(Connection con) {
+            public void disconnected(com.esotericsoftware.kryonet.Connection con) {
                 conveyor.connections.remove(con);
             }
 
             @Override
-            public void idle(Connection con) {
+            public void idle(com.esotericsoftware.kryonet.Connection con) {
 
             }
 

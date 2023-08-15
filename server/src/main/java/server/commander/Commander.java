@@ -198,8 +198,7 @@ public class Commander extends Thread {
             return;
         }
         Session session = player.getSession();
-        if (session != null) {
-            session.getPlayers().remove(player);
+        if (session == null) {
             Request response = addFields(req.getInitialization(), reqConst,
                     RequestConstants.STATUS, RequestConstants.FAILED, RequestConstants.REASON,
                     "This session doesn't exist");

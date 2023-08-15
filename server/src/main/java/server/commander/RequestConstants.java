@@ -1,6 +1,6 @@
 package server.commander;
 
-enum RequestConstants {
+public enum RequestConstants {
     STATUS,
     REASON,
     SUCCESS,
@@ -13,7 +13,11 @@ enum RequestConstants {
     SET_DATA_TO_GAME_SESSION,
     ERROR_REQUEST,
     COULDNT_FIND_YOUR_ID,
-    UNSUPPORTED_REQUEST_FORMAT;
+    UNSUPPORTED_REQUEST_FORMAT,
+    CARDS_IN_TOWER,
+    CARDS_AT_PLAYER,
+    BOTTOM_CARD,
+    CURRENT_PLAYER;
 
     private RequestConstants() {
 

@@ -1,6 +1,5 @@
 package server.commander;
 
-import java.util.Objects;
 import java.util.UUID;
 
 import server.confirmer.Confirmer;
@@ -177,6 +176,9 @@ public class Commander extends Thread {
             addResponse(response);
         }
         player.setSession(null);
+        if (session.getPlayers().isEmpty()) {
+            conveyor.sessions.remove(session.getName());
+        }
     }
 
     private void getDataFromGameSession(Request req) {

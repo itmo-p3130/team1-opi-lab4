@@ -2,6 +2,9 @@ package server.session;
 
 import java.util.Vector;
 
+import server.conveyor.Cards.Card;
+import server.conveyor.Cards.CardNum;
+import server.conveyor.Cards.CardSuit;
 import server.network.Request;
 import server.user.User;
 
@@ -10,7 +13,8 @@ public class Session {
     private Vector<Request> requests;
     private Boolean isPlayNow;
     private Integer countOfPlayers;
-    private Integer playerTurn;
+    private User playerTurn;
+    private Card bottomCard;
     private String name;
 
     public Session(String name) {
@@ -47,4 +51,19 @@ public class Session {
         this.isPlayNow = mk;
     }
 
+    public Card getBottomCard() {
+        return this.bottomCard;
+    }
+
+    public void setBottomCard(Card card) {
+        this.bottomCard = card;
+    }
+
+    public void setBottomCard(CardNum num, CardSuit suit) {
+        this.bottomCard = new Card(num, suit);
+    }
+
+    public User getCurrentPlayer() {
+        return this.playerTurn;
+    }
 }

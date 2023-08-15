@@ -5,7 +5,7 @@ import org.jsfml.graphics.*;
 public class Card {
     private CardSuit cardSuit;
     private CardNum cardNum;
-    private Sprite sprite;
+    private transient Sprite sprite;
 
     public Card(Sprite spr, CardNum num, CardSuit suit) {
         this.cardNum = num;

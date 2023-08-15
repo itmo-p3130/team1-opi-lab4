@@ -31,7 +31,7 @@ public class Request {
         mapData.put(name, data);
     }
 
-    public Map<Object, Object> getData() {
+    public HashMap<Object, Object> getData() {
         return mapData;
     }
 

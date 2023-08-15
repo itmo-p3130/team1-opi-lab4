@@ -9,8 +9,8 @@ import com.esotericsoftware.kryonet.Connection;
 
 public class Request {
     private final UUID initialization;
-    private final HashMap<String, Object> mapData;
-    private String requestType;
+    private final HashMap<Object, Object> mapData;
+    private Object requestType;
     private transient com.esotericsoftware.kryonet.Connection connection;
 
     public Request(UUID init) {
@@ -23,7 +23,7 @@ public class Request {
         return this.initialization;
     }
 
-    public void addData(String name, Object data) {
+    public void addData(Object name, Object data) {
         mapData.put(name, data);
     }
 
@@ -31,7 +31,7 @@ public class Request {
         mapData.put(name, data);
     }
 
-    public Map<String, Object> getData() {
+    public Map<Object, Object> getData() {
         return mapData;
     }
 
@@ -39,15 +39,15 @@ public class Request {
         return mapData.get(name);
     }
 
-    public Set<String> getKeys() {
+    public Set<Object> getKeys() {
         return mapData.keySet();
     }
 
-    public void setType(String type) {
+    public void setType(Object type) {
         this.requestType = type;
     }
 
-    public String getType() {
+    public Object getType() {
         return this.requestType;
     }
 

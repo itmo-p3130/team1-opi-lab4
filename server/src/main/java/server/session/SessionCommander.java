@@ -1,6 +1,7 @@
 package server.session;
 
 import server.conveyor.Conveyor;
+import server.network.Request;
 
 public class SessionCommander extends Thread {
     private Conveyor conveyor;
@@ -31,6 +32,10 @@ public class SessionCommander extends Thread {
     }
 
     private void handleSession(String name, Session session) {
-        // Process game session
+
+    }
+
+    private void handleRequest(Request req) {
+
     }
 }

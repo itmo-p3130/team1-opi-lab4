@@ -1,5 +1,6 @@
 package server.commander;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import server.confirmer.Confirmer;
@@ -34,24 +35,24 @@ public class Commander extends Thread {
     }
 
     private void distributeRequest(Request req) {
-        String type = req.getType();
-        switch (type) {
-            case RequestConstants.UUID_REGISTRATION -> {
+        Object type = req.getType();
+        switch ((RequestConstants) type) {
+            case UUID_REGISTRATION -> {
                 uuidRegistration(req);
             }
-            case RequestConstants.INIT_GAME_SESSION -> {
+            case INIT_GAME_SESSION -> {
                 initGameSession(req);
             }
-            case RequestConstants.CONNECT_TO_GAME_SESSION -> {
+            case CONNECT_TO_GAME_SESSION -> {
                 connectToGameSession(req);
             }
-            case RequestConstants.QUIT_FROM_GAME_SESSION -> {
+            case QUIT_FROM_GAME_SESSION -> {
                 quitFromGameSession(req);
             }
-            case RequestConstants.GET_DATA_FROM_GAME_SESSION -> {
+            case GET_DATA_FROM_GAME_SESSION -> {
                 getDataFromGameSession(req);
             }
-            case RequestConstants.SET_DATA_TO_GAME_SESSION -> {
+            case SET_DATA_TO_GAME_SESSION -> {
                 setDataToGameSession(req);
             }
             default -> {
@@ -64,7 +65,7 @@ public class Commander extends Thread {
         conveyor.responses.add(req);
     }
 
-    private Request addFields(UUID uid, String type, String... fields) {
+    private Request addFields(UUID uid, RequestConstants type, Object... fields) {
         Request request = new Request(uid);
         request.setType(type);
         for (int i = 0; i <= fields.length - 1; i += 2) {
@@ -186,7 +187,7 @@ public class Commander extends Thread {
         sendRequestToGameSession(req, RequestConstants.SET_DATA_TO_GAME_SESSION);
     }
 
-    private void sendRequestToGameSession(Request req, String reqConst) {
+    private void sendRequestToGameSession(Request req, RequestConstants reqConst) {
         UUID uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {

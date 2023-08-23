@@ -1,4 +1,4 @@
-package server.conveyor.Cards;
+package server.conveyor.cards;
 
 public enum CardNum {
     Ace(0),

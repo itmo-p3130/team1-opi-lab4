@@ -7,6 +7,7 @@ public enum RequestConstants {
     FAILED,
     UUID_REGISTRATION,
     INIT_GAME_SESSION,
+    GAME_SESSION_NAME,
     CONNECT_TO_GAME_SESSION,
     QUIT_FROM_GAME_SESSION,
     GET_DATA_FROM_GAME_SESSION,
@@ -17,7 +18,12 @@ public enum RequestConstants {
     CARDS_IN_TOWER,
     CARDS_AT_PLAYER,
     BOTTOM_CARD,
-    CURRENT_PLAYER;
+    CURRENT_PLAYER,
+    PLAYERS_IN_SESSION,
+    TURN_CARD_NUM,
+    TURN_CARD_SUIT,
+    TOTAL_CARDS_NUMBER,
+    ALL_PLAYERS_CARDS;
 
     private RequestConstants() {
 

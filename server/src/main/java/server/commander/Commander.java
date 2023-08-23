@@ -22,7 +22,7 @@ public class Commander extends Thread {
             if (conveyor.requests.isEmpty()) {
                 synchronized (conveyor.requests) {
                     try {
-                        conveyor.wait();
+                        conveyor.requests.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -90,7 +90,7 @@ public class Commander extends Thread {
             addResponse(response);
             return;
         }
-        Object gameSessionName = req.getData("--Game-Session-Name");
+        Object gameSessionName = req.getData(RequestConstants.GAME_SESSION_NAME);
         String sessionName = "";
         if (gameSessionName instanceof String) {
             sessionName = (String) gameSessionName;
@@ -127,7 +127,7 @@ public class Commander extends Thread {
             addResponse(response);
             return;
         }
-        Object gameSessionName = req.getData("--Game-Session-Name");
+        Object gameSessionName = req.getData(RequestConstants.GAME_SESSION_NAME);
         String sessionName = "";
         if (gameSessionName instanceof String) {
             sessionName = (String) gameSessionName;
@@ -171,14 +171,15 @@ public class Commander extends Thread {
         Session session = player.getSession();
         if (session != null) {
             session.getPlayers().remove(player);
+            session.setGameToOver("Player " + player.getInitialization() + " has left the game");
             Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
                     RequestConstants.STATUS, RequestConstants.SUCCESS);
             addResponse(response);
+            if (session.getPlayers().isEmpty()) {
+                conveyor.sessions.remove(session.getName());
+            }
         }
         player.setSession(null);
-        if (session.getPlayers().isEmpty()) {
-            conveyor.sessions.remove(session.getName());
-        }
     }
 
     private void getDataFromGameSession(Request req) {

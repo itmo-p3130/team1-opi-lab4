@@ -27,7 +27,7 @@ public class Request {
         mapData.put(name, data);
     }
 
-    public void setData(String name, Object data) {
+    public void setData(Object name, Object data) {
         mapData.put(name, data);
     }
 
@@ -35,7 +35,7 @@ public class Request {
         return mapData;
     }
 
-    public Object getData(String name) {
+    public Object getData(Object name) {
         return mapData.get(name);
     }
 

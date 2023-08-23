@@ -1,4 +1,4 @@
-package server.conveyor.Cards;
+package server.conveyor.cards;
 
 public enum CardSuit {
     Hearts(0),
@@ -29,4 +29,5 @@ public enum CardSuit {
         }
         return 0;
     }
+
 }

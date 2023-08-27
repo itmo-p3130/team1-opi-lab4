@@ -108,7 +108,7 @@ public class Commander extends Thread {
             addResponse(response);
             return;
         }
-        Session session = new Session(sessionName);
+        Session session = new Session(sessionName, req.getInitialization());
         session.addPlayer(player);
         conveyor.sessions.put(sessionName, session);
         conveyor.sessions.notifyAll();

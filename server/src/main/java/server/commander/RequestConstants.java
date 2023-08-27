@@ -22,8 +22,11 @@ public enum RequestConstants {
     PLAYERS_IN_SESSION,
     TURN_CARD_NUM,
     TURN_CARD_SUIT,
+    TURN_END,
     TOTAL_CARDS_NUMBER,
-    ALL_PLAYERS_CARDS;
+    ALL_PLAYERS_CARDS,
+    SET_GAME_START,
+    IS_GAME_PLAYING;
 
     private RequestConstants() {
 

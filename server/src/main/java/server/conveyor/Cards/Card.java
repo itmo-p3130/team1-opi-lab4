@@ -18,4 +18,12 @@ public class Card {
     public String toString() {
         return cardNum.name() + " " + cardSuit.name();
     }
+
+    public CardNum getNum() {
+        return cardNum;
+    }
+
+    public CardSuit getSuit() {
+        return cardSuit;
+    }
 }

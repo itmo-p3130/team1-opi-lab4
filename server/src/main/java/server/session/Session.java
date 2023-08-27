@@ -3,10 +3,12 @@ package server.session;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+import server.commander.RequestConstants;
 import server.conveyor.cards.Card;
 import server.conveyor.cards.CardNum;
 import server.conveyor.cards.CardSuit;
@@ -22,18 +24,22 @@ public class Session {
     private String reasonForOvering;
     private Integer countOfPlayers;
     private User playerTurn;
+    private User playerAttack;
     private Card bottomCard;
     private Vector<Card> allCardsTower;
     private Vector<Card> turnCardsTower;
     private HashMap<UUID, Vector<Card>> playersCards;
     private String name;
+    private UUID sessionOwner;
 
-    public Session(String name) {
+    public Session(String name, UUID owner) {
         this.players = new Vector<>();
         this.name = name;
         this.isPlayNow = false;
-        this.turnCardsTower = CardsTower.getTower();
+        this.allCardsTower = CardsTower.getTower();
+        this.bottomCard = this.allCardsTower.lastElement();
         this.playersCards = new HashMap<>();
+        this.sessionOwner = owner;
     }
 
     public void addPlayer(User user) {
@@ -43,6 +49,11 @@ public class Session {
 
     public Vector<User> getPlayers() {
         return this.players;
+    }
+
+    public void logicSetGameStarts() {
+        this.countOfPlayers = this.players.size();
+        setIsPlayNow(true);
     }
 
     public String getName() {
@@ -106,6 +117,7 @@ public class Session {
     public void setGameToOver(String reason) {
         this.isOver = true;
         this.reasonForOvering = reason;
+        this.isPlayNow = false;
     }
 
     public Boolean isGameOver() {
@@ -128,9 +140,121 @@ public class Session {
         return this.playersCards.get(uid);
     }
 
-    public HashMap<UUID, Card> getAllPlayersCards(UUID uid) {
-        HashMap<UUID, Card> playersCards = (HashMap<UUID, Card>) this.playersCards.clone();
-        playersCards.remove(uid);
+    public HashMap<UUID, Integer> getAllPlayersCards() {
+        HashMap<UUID, Integer> playersCards = new HashMap<>();
+        for (User user : this.players) {
+            playersCards.put(user.getInitialization(), this.playersCards.get(user.getInitialization()).size());
+        }
         return playersCards;
+    }
+
+    public Boolean logicCanAddCardToTower(Card card, UUID player) {
+        if (this.playerTurn.getInitialization() == player) {
+            Card lastCard = this.turnCardsTower.lastElement();
+            if (lastCard == null) {
+                this.turnCardsTower.add(card);
+                this.playerAttack = this.findPlayer(player);
+                return true;
+            } else if (this.turnCardsTower.size() % 2 == 1) {
+                int num = (lastCard.getNum().id + 12) % 13;
+                if (lastCard.getSuit() == this.bottomCard.getSuit()) {
+                    num *= 10;
+                }
+                int numNew = (card.getNum().id + 12) % 13;
+                if (card.getSuit() == this.bottomCard.getSuit()) {
+                    numNew *= 10;
+                }
+                if (card.getSuit() == lastCard.getSuit() || card.getSuit() == this.bottomCard.getSuit()) {
+                    if (numNew > num) {
+                        turnCardsTower.add(card);
+                        return true;
+                    }
+                }
+
+            } else {
+                for (Card crd : turnCardsTower) {
+                    if (crd.getNum() == card.getNum()) {
+                        turnCardsTower.add(card);
+                        return true;
+                    }
+                }
+                return false;
+
+            }
+        }
+        return false;
+    }
+
+    public void logicPlayerTakeTower(UUID user) {
+        this.playersCards.get(user).addAll(this.turnCardsTower);
+    }
+
+    public void logicTowerTurnEnd() {
+        this.allCardsTower = new Vector<>();
+        this.playerAttack = null;
+    }
+
+    public void logicGiveCardsToAllPlayers() {
+        for (User user : this.players) {
+            while (this.playersCards.get(user.getInitialization()).size() < 6 && !this.allCardsTower.isEmpty()) {
+                this.playersCards.get(user.getInitialization()).add(this.allCardsTower.firstElement());
+            }
+        }
+    }
+
+    public void logicChoseFirstPlayer() {
+        Random rnd = new Random();
+        this.playerTurn = this.players.get(rnd.nextInt(this.countOfPlayers - 1));
+    }
+
+    public UUID logicCheckIsThereWinner() {
+        for (User user : this.players) {
+            if (playersCards.get(user.getInitialization()).isEmpty() && allCardsTower.isEmpty()) {
+                return user.getInitialization();
+            }
+        }
+        return null;
+    }
+
+    public User logicTurnToNextPlayer() {
+        this.playerTurn = this.players.get((this.players.indexOf(this.playerTurn) + 1) % this.players.size());
+        return this.playerTurn;
+    }
+
+    public User logicTurnToPreviousPlayer() {
+        this.playerTurn = this.players
+                .get((this.players.indexOf(this.playerTurn) + this.players.size() - 1) % this.players.size());
+        return this.playerTurn;
+    }
+
+    public void utilSendToAllExcept(UUID uid, Object packet) {
+        // SEND TO ALL USERS WITH FOR-EACH
+    }
+
+    public Vector<Request> utilSendToAllCurrentGameSessionData() {
+        Vector<Request> reqs = new Vector<>();
+        for (User user : this.players) {
+            Request newRequest;
+            newRequest = new Request(user.getInitialization());
+            newRequest.setType(RequestConstants.SET_GAME_START);
+            newRequest.addData(RequestConstants.PLAYERS_IN_SESSION, this.getPlayersList());
+            newRequest.addData(RequestConstants.CURRENT_PLAYER, this.getCurrentPlayer().getInitialization());
+            newRequest.addData(RequestConstants.CARDS_AT_PLAYER, this.getPlayerCards(user.getInitialization()));
+            newRequest.addData(RequestConstants.CARDS_IN_TOWER, this.getTurnCardsTower());
+            newRequest.addData(RequestConstants.BOTTOM_CARD, this.getBottomCard());
+            newRequest.addData(RequestConstants.TOTAL_CARDS_NUMBER, this.getTotalCardsNumber());
+            newRequest.addData(RequestConstants.ALL_PLAYERS_CARDS, this.getAllPlayersCards());
+            newRequest.addData(RequestConstants.IS_GAME_PLAYING, this.reasonForOvering);
+            reqs.add(newRequest);
+        }
+        return requests;
+    }
+
+    public UUID getOwner() {
+        return this.sessionOwner;
+    }
+
+    public UUID getAttackPlayer() {
+        return this.playerAttack.getInitialization();
     }
 }

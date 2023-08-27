@@ -16,6 +16,7 @@ public class Server {
         Commander commander = new Commander(conveyor);
         SessionCommander sessionCommander = new SessionCommander(conveyor);
         ResponsesCommander responsesCommander = new ResponsesCommander(conveyor);
+        
         network.start();
         commander.start();
         sessionCommander.start();

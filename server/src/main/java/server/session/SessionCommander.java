@@ -65,8 +65,8 @@ public class SessionCommander extends Thread {
             case SET_DATA_TO_GAME_SESSION -> {
                 HashMap<Object, Object> fields = req.getData();
                 Object uidOBJ = fields.get(RequestConstants.SET_GAME_START);
-                if (uidOBJ instanceof UUID) {// CHECKING FOR STARTING
-                    UUID uid = (UUID) uidOBJ;
+                if (uidOBJ instanceof String) {// CHECKING FOR STARTING
+                    String uid = (String) uidOBJ;
                     if (uid == ses.getOwner()) {
                         ses.logicSetGameStarts();
                         ses.logicGiveCardsToAllPlayers();
@@ -98,14 +98,14 @@ public class SessionCommander extends Thread {
                     }
                     Object endTowerTurnOBJ = req.getData(RequestConstants.TURN_END);
                     if (ses.getAttackPlayer() == req.getInitialization()) {// CHECKING FOR ENDING OF FIGHT
-                        if (endTowerTurnOBJ instanceof UUID) {
+                        if (endTowerTurnOBJ instanceof String) {
                             if (ses.getCurrentPlayer().getInitialization() == req.getInitialization()
-                                    && ses.getAttackPlayer() == (UUID) endTowerTurnOBJ
+                                    && ses.getAttackPlayer() == (String) endTowerTurnOBJ
                                     && ses.getTurnCardsTower().size() >= 2) {
 
                                 ses.logicTowerTurnEnd();
                                 ses.logicGiveCardsToAllPlayers();
-                                UUID uid = ses.logicCheckIsThereWinner();
+                                String uid = ses.logicCheckIsThereWinner();
                                 ses.logicTurnToNextPlayer();
                                 if (uid != null) {
                                     ses.setGameToOver("The winner is " + uid);
@@ -113,12 +113,12 @@ public class SessionCommander extends Thread {
                             }
                         }
                     } else {
-                        if (endTowerTurnOBJ instanceof UUID) {
-                            if (ses.getCurrentPlayer().getInitialization() == (UUID) endTowerTurnOBJ) {
+                        if (endTowerTurnOBJ instanceof String) {
+                            if (ses.getCurrentPlayer().getInitialization() == (String) endTowerTurnOBJ) {
                                 ses.logicPlayerTakeTower(req.getInitialization());
                                 ses.logicTowerTurnEnd();
                                 ses.logicGiveCardsToAllPlayers();
-                                UUID uid = ses.logicCheckIsThereWinner();
+                                String uid = ses.logicCheckIsThereWinner();
                                 if (uid != null) {
                                     ses.setGameToOver("The winner is " + uid);
                                 }

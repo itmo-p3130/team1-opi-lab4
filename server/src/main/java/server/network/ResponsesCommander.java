@@ -32,6 +32,7 @@ public class ResponsesCommander extends Thread {
             Request response = conveyor.responses.get(0);
             com.esotericsoftware.kryonet.Connection con = response.getConnection();
             con.sendTCP(response);
+            System.err.println("Sended: " + response.getType());
             conveyor.responses.remove(response);
         }
     }

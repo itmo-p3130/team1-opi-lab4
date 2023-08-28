@@ -5,12 +5,14 @@ import client.cardWindow.Cards.Card;
 import client.cardWindow.Cards.CardNum;
 import client.cardWindow.Cards.CardSuit;
 import client.cardWindow.Players.Player;
+import client.conveyor.Conveyor;
 
 import org.jsfml.audio.Sound;
 import org.jsfml.graphics.*;
 import org.jsfml.graphics.Color;
 import org.jsfml.graphics.Image;
 import org.jsfml.system.*;
+import org.jsfml.window.ContextActivationException;
 import org.jsfml.window.ContextSettings;
 import org.jsfml.window.Mouse;
 import org.jsfml.window.VideoMode;
@@ -33,27 +35,20 @@ public class CardWindow {
     private Vector2f screenSize;
     private Sprite pokerTable;
     private Clock frClock;
+    private Conveyor conveyor;
     private Vector<Card> cards;
     private Vector<Animation> animations;
     private Vector<Vector2f> positions;
     private Vector<Player> players;
 
-    public CardWindow() {
+    public CardWindow(Conveyor conv) {
+        this.conveyor = conv;
         init();
         initPlayersPoses(6);
         new Player(worldPos);
         for (Vector2f pos : positions) {
             players.add(new Player(pos));
         }
-        players.get(0).addCard(getBackCard());
-        players.get(1).addCard(getBackCard());
-        players.get(2).addCard(getBackCard());
-        players.get(3).addCard(getBackCard());
-        players.get(4).addCard(getBackCard());
-        players.get(5).addCard(getBackCard());
-        players.get(4).addCard(getBackCard());
-        players.get(2).addCard(getBackCard());
-        players.get(2).addCard(getBackCard());
         System.out.println(view.getCenter()); // 500-500
         System.out.println(view.getViewport());// 0 0 1 1
         System.out.println(view.getSize());// 1000 1000
@@ -71,6 +66,14 @@ public class CardWindow {
         // frame)->{card.getSprite().setPosition(frame*(float)(5+it*10),frame*(float)(5+it*10));
         // }));
         // }
+        RectangleShape startButton = new RectangleShape(new Vector2f(200, 75));
+        RectangleShape skipButton = new RectangleShape(new Vector2f(200, 75));
+        CircleShape currentPlayer = new CircleShape(15);
+        startButton.setFillColor(Color.GREEN);
+        skipButton.setFillColor(Color.GREEN);
+        currentPlayer.setFillColor(Color.GREEN);
+        startButton.setPosition(380, 715);
+        skipButton.setPosition(20, 800);
         while (window.isOpen()) {
             Time dTime = frClock.restart();
             float dSeconds = dTime.asSeconds();
@@ -82,21 +85,15 @@ public class CardWindow {
             for (Player p : players) {
                 p.drawCards(window);
             }
-            Vector<Animation> animends = new Vector<>();
-            for (int i = 0; i != animations.size(); i++) {
-                if (animations.elementAt(i).play(dSeconds)) {
-                    animends.add(animations.elementAt(i));
-                }
-            }
-            for (Animation anim : animends) {
-                animations.remove(anim);
-            }
+            window.draw(currentPlayer);
+            window.draw(skipButton);
+            window.draw(startButton);
             window.display();
             for (org.jsfml.window.event.Event event : window.pollEvents()) {
                 switch (event.type) {
                     case CLOSED -> {
                         window.close();
-                        break;
+                        return;
                     }
                     case KEY_PRESSED -> {
                         org.jsfml.window.event.KeyEvent keyEvent = event.asKeyEvent();

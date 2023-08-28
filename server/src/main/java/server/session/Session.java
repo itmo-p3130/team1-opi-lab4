@@ -28,11 +28,11 @@ public class Session {
     private Card bottomCard;
     private Vector<Card> allCardsTower;
     private Vector<Card> turnCardsTower;
-    private HashMap<UUID, Vector<Card>> playersCards;
+    private HashMap<String, Vector<Card>> playersCards;
     private String name;
-    private UUID sessionOwner;
+    private String sessionOwner;
 
-    public Session(String name, UUID owner) {
+    public Session(String name, String owner) {
         this.players = new Vector<>();
         this.name = name;
         this.isPlayNow = false;
@@ -92,11 +92,11 @@ public class Session {
         return this.playerTurn;
     }
 
-    public void setCurrentPlayer(UUID uid) {
+    public void setCurrentPlayer(String uid) {
         this.playerTurn = findPlayer(uid);
     }
 
-    public User findPlayer(UUID uid) {
+    public User findPlayer(String uid) {
         for (User user : this.players) {
             if (user.getInitialization() == uid)
                 return user;
@@ -104,7 +104,7 @@ public class Session {
         return null;
     }
 
-    public List<UUID> getPlayersList() {
+    public List<String> getPlayersList() {
         return players.stream()
                 .map(User::getInitialization)
                 .collect(Collectors.toList());
@@ -136,19 +136,19 @@ public class Session {
         return this.turnCardsTower;
     }
 
-    public Vector<Card> getPlayerCards(UUID uid) {
+    public Vector<Card> getPlayerCards(String uid) {
         return this.playersCards.get(uid);
     }
 
-    public HashMap<UUID, Integer> getAllPlayersCards() {
-        HashMap<UUID, Integer> playersCards = new HashMap<>();
+    public HashMap<String, Integer> getAllPlayersCards() {
+        HashMap<String, Integer> playersCards = new HashMap<>();
         for (User user : this.players) {
             playersCards.put(user.getInitialization(), this.playersCards.get(user.getInitialization()).size());
         }
         return playersCards;
     }
 
-    public Boolean logicCanAddCardToTower(Card card, UUID player) {
+    public Boolean logicCanAddCardToTower(Card card, String player) {
         if (this.playerTurn.getInitialization() == player) {
             Card lastCard = this.turnCardsTower.lastElement();
             if (lastCard == null) {
@@ -185,7 +185,7 @@ public class Session {
         return false;
     }
 
-    public void logicPlayerTakeTower(UUID user) {
+    public void logicPlayerTakeTower(String user) {
         this.playersCards.get(user).addAll(this.turnCardsTower);
     }
 
@@ -207,7 +207,7 @@ public class Session {
         this.playerTurn = this.players.get(rnd.nextInt(this.countOfPlayers - 1));
     }
 
-    public UUID logicCheckIsThereWinner() {
+    public String logicCheckIsThereWinner() {
         for (User user : this.players) {
             if (playersCards.get(user.getInitialization()).isEmpty() && allCardsTower.isEmpty()) {
                 return user.getInitialization();
@@ -250,11 +250,11 @@ public class Session {
         return requests;
     }
 
-    public UUID getOwner() {
+    public String getOwner() {
         return this.sessionOwner;
     }
 
-    public UUID getAttackPlayer() {
+    public String getAttackPlayer() {
         return this.playerAttack.getInitialization();
     }
 }

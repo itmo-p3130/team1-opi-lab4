@@ -1,12 +1,14 @@
 package server.network;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.UUID;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Server;
 
 import server.conveyor.Conveyor;
+import server.conveyor.cards.Card;
 
 public class Network extends Thread {
     private final Conveyor conveyor;
@@ -15,6 +17,11 @@ public class Network extends Thread {
     public Network(Conveyor conveyor) {
         this.conveyor = conveyor;
         this.server = new Server();
+        this.server.getKryo().register(Request.class);
+        this.server.getKryo().register(Object.class);
+        this.server.getKryo().register(String.class);
+        this.server.getKryo().register(Card.class);
+        this.server.getKryo().register(HashMap.class);
     }
 
     @Override
@@ -32,7 +39,11 @@ public class Network extends Thread {
         this.server.addListener(new ConveyorListener(this.conveyor) {
             @Override
             public void connected(com.esotericsoftware.kryonet.Connection con) {
-                conveyor.connections.put(con, UUID.randomUUID());
+                String uid = UUID.randomUUID().toString();
+                conveyor.connections.put(con, uid);
+                Request req = new Request(uid);
+                con.sendTCP(req);
+                System.err.println("New client: " + req.getInitialization());
             }
 
             @Override
@@ -40,9 +51,11 @@ public class Network extends Thread {
                 if (obj instanceof Request) {
                     Request req = (Request) obj;
                     req.setConnection(con);
-                    con.sendTCP(req);
+                    System.err.println(req.getType());
                     conveyor.requests.add(req);
-                    conveyor.requests.notifyAll();
+                    synchronized (conveyor.requests) {
+                        conveyor.requests.notifyAll();
+                    }
                 }
             }
 

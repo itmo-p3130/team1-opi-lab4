@@ -29,6 +29,7 @@ public class Commander extends Thread {
                 }
             } else {
                 distributeRequest(conveyor.requests.get(0));
+                conveyor.responses.notifyAll();
             }
         }
     }
@@ -64,7 +65,7 @@ public class Commander extends Thread {
         conveyor.responses.add(req);
     }
 
-    private Request addFields(UUID uid, RequestConstants type, Object... fields) {
+    private Request addFields(String uid, RequestConstants type, Object... fields) {
         Request request = new Request(uid);
         request.setType(type);
         for (int i = 0; i <= fields.length - 1; i += 2) {
@@ -74,14 +75,18 @@ public class Commander extends Thread {
     }
 
     private void uuidRegistration(Request req) {
-        UUID uid = Confirmer.getToken();
+        String uid = Confirmer.getToken().toString();
         User user = new User(uid, req.getConnection());
         conveyor.connections.put(req.getConnection(), uid);
         conveyor.clients.put(uid, user);
+        Request newReq = new Request(uid);
+        newReq.setType(RequestConstants.UUID_REGISTRATION);
+        newReq.addData(RequestConstants.UUID_REGISTRATION, uid);
+        addResponse(newReq);
     }
 
     private void initGameSession(Request req) {
-        UUID uuid = req.getInitialization();
+        String uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {
             Request response = addFields(req.getInitialization(), RequestConstants.INIT_GAME_SESSION,
@@ -118,7 +123,7 @@ public class Commander extends Thread {
     }
 
     private void connectToGameSession(Request req) {
-        UUID uuid = req.getInitialization();
+        String uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {
             Request response = addFields(req.getInitialization(), RequestConstants.CONNECT_TO_GAME_SESSION,
@@ -159,7 +164,7 @@ public class Commander extends Thread {
     }
 
     private void quitFromGameSession(Request req) {
-        UUID uuid = req.getInitialization();
+        String uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {
             Request response = addFields(req.getInitialization(), RequestConstants.QUIT_FROM_GAME_SESSION,
@@ -191,7 +196,7 @@ public class Commander extends Thread {
     }
 
     private void sendRequestToGameSession(Request req, RequestConstants reqConst) {
-        UUID uuid = req.getInitialization();
+        String uuid = req.getInitialization();
         User player = conveyor.clients.get(uuid);
         if (player == null) {
             Request response = addFields(req.getInitialization(), reqConst,

@@ -1,4 +1,4 @@
-package server.network;
+package client.conveyor;
 
 import java.util.HashMap;
 import java.util.Map;

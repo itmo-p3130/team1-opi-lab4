@@ -9,11 +9,11 @@ import server.session.Session;
 
 public class User {
     private String ip;
-    private UUID init;
+    private String init;
     private Connection connection;
     private Session session;
 
-    public User(UUID initializationCode, Connection connection) {
+    public User(String initializationCode, Connection connection) {
         this.ip = connection.getRemoteAddressTCP().toString();
         this.init = initializationCode;
         this.connection = connection;
@@ -23,7 +23,7 @@ public class User {
         return this.ip;
     }
 
-    public UUID getInitialization() {
+    public String getInitialization() {
         return this.init;
     }
 

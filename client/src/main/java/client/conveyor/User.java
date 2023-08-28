@@ -6,11 +6,15 @@ import com.esotericsoftware.kryonet.Connection;
 
 public class User {
     private Integer init;
-    Integer cards;
+    transient Integer cards;
 
     public User(Integer initializationCode) {
         this.init = initializationCode;
         cards = 0;
+    }
+
+    public User() {
+
     }
 
     public Integer getInitialization() {

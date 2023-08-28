@@ -11,7 +11,7 @@ import client.cardWindow.Cards.CardNum;
 import client.cardWindow.Cards.CardSuit;
 
 public class Conveyor {
-    public final ConcurrentHashMap<Integer, User> clients;
+    public final ConcurrentHashMap<Integer, Integer> clients;
     public final Vector<Request> requests;
     public final Vector<Request> responses;
     public final Client client;
@@ -34,5 +34,6 @@ public class Conveyor {
         this.isMoreCards = true;
         this.playerCards = new Vector<>();
         this.cardsInTower = new Vector<>();
+        this.currentPlayer = -1;
     }
 }

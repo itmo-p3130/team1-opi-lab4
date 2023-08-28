@@ -42,6 +42,7 @@ public class Session {
         this.sessionOwner = owner;
         this.requests = new Vector<>();
         this.isOver = false;
+        this.turnCardsTower = new Vector<>();
     }
 
     public void addPlayer(User user) {
@@ -83,6 +84,7 @@ public class Session {
     }
 
     public Card getBottomCard() {
+        System.err.println("Bottom card:" + bottomCard.toString());
         return this.bottomCard;
     }
 
@@ -156,12 +158,13 @@ public class Session {
 
     public Boolean logicCanAddCardToTower(Card card, Integer player) {
         if (this.playerTurn.getInitialization() == player) {
-            Card lastCard = this.turnCardsTower.lastElement();
-            if (lastCard == null) {
+
+            if (turnCardsTower.size() == 0) {
                 this.turnCardsTower.add(card);
                 this.playerAttack = this.findPlayer(player);
                 return true;
             } else if (this.turnCardsTower.size() % 2 == 1) {
+                Card lastCard = this.turnCardsTower.lastElement();
                 int num = (lastCard.getNum().id + 12) % 13;
                 if (lastCard.getSuit() == this.bottomCard.getSuit()) {
                     num *= 10;
@@ -204,6 +207,7 @@ public class Session {
         for (User user : this.players) {
             while (this.playersCards.get(user.getInitialization()).size() < 6 && !this.allCardsTower.isEmpty()) {
                 this.playersCards.get(user.getInitialization()).add(this.allCardsTower.firstElement());
+                this.allCardsTower.remove(0);
             }
         }
     }
@@ -263,5 +267,10 @@ public class Session {
 
     public Integer getAttackPlayer() {
         return this.playerAttack.getInitialization();
+    }
+
+    public void removePlayer(Integer id) {
+        this.players.remove(id);
+        this.playersCards.remove(id);
     }
 }

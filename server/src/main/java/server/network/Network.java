@@ -15,6 +15,7 @@ import server.conveyor.Conveyor;
 import server.conveyor.cards.Card;
 import server.conveyor.cards.CardNum;
 import server.conveyor.cards.CardSuit;
+import server.user.User;
 
 public class Network extends Thread {
     private final Conveyor conveyor;
@@ -34,6 +35,7 @@ public class Network extends Thread {
         this.server.getKryo().register(CardSuit.class);
         this.server.getKryo().register(ArrayList.class);
         this.server.getKryo().register(Vector.class);
+        this.server.getKryo().register(User.class);
     }
 
     @Override
@@ -53,11 +55,7 @@ public class Network extends Thread {
             public void connected(com.esotericsoftware.kryonet.Connection con) {
                 Integer uid = con.getID();
                 conveyor.connections.put(uid, con);
-                Request req = new Request(uid);
-                req.setType(RequestConstants.UUID_REGISTRATION);
-                req.addData(RequestConstants.UUID_REGISTRATION, uid);
-                con.sendTCP(req);
-                System.err.println("New client: " + req.getInitialization());
+                System.err.println("New client: " + uid);
                 System.err.println("Now there is: " + conveyor.connections.size());
             }
 
@@ -76,13 +74,9 @@ public class Network extends Thread {
 
             @Override
             public void disconnected(com.esotericsoftware.kryonet.Connection con) {
-                for (Map.Entry<Integer, Connection> entry : conveyor.connections.entrySet()) {
-                    if (!entry.getValue().isConnected()) {
-                        conveyor.session.getPlayers().remove(conveyor.session.findPlayer(entry.getKey()));
-                        conveyor.clients.remove(entry.getKey());
-                        conveyor.connections.remove(entry.getKey());
-                    }
-                }
+                conveyor.connections.remove(con.getID());
+                conveyor.clients.remove(con.getID());
+                conveyor.session.removePlayer(con.getID());
             }
 
             @Override

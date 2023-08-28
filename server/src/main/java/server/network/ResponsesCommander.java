@@ -29,11 +29,8 @@ public class ResponsesCommander extends Thread {
     private void sendBack() {
         while (!conveyor.responses.isEmpty()) {
             Request response = conveyor.responses.get(0);
-            if (conveyor.connections.get(response.getInitialization()).isConnected()) {
-                conveyor.connections.get(response.getInitialization()).sendTCP(response);
-            }
-            System.err.println("Sended: " + response.getType());
-            System.err.println(conveyor.responses.size() + " " + conveyor.requests.size());
+            conveyor.connections.get(response.getInitialization()).sendTCP(response);
+            System.err.println("Sended:" + response.getInitialization() + ":" + response.getType());
             conveyor.responses.remove(response);
         }
     }

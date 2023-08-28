@@ -38,16 +38,23 @@ public class Player {
     }
 
     public void addCard(Card card) {
-        Card nCard = new Card(card);
-        nCard.getSprite().setPosition(position.x + 40 * cards.size(), position.y);
-        cards.add(nCard);
-        for (Card c : cards) {
-            System.out.println(c.getSprite().getPosition());
-            System.out.println();
-        }
+        card.getSprite().setPosition(position.x + 40 * cards.size(), position.y);
+        cards.add(card);
+        // for (Card c : cards) {
+        // // System.out.println(c.getSprite().getPosition());
+        // // System.out.println();
+        // }
     }
 
     public void throwCard(int card) {
         cards.remove(card);
+    }
+
+    public void deleteCards() {
+        this.cards.clear();
+    }
+
+    public Vector<Card> getCards() {
+        return this.cards;
     }
 }

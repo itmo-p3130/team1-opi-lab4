@@ -53,14 +53,14 @@ public class Commander extends Thread {
                                 Integer playerName = e.getKey();
                                 Integer cardValue = e.getValue();
                                 if (playerName.equals(conveyor.userID)) {
-                                    conveyor.clients.put(playerName, new User(playerName));
-                                    conveyor.clients.get(playerName).cards = cardValue;
+                                    conveyor.clients.put(playerName, cardValue);
                                 }
                             }
                         }
                     }
                     case BOTTOM_CARD -> {
                         conveyor.bottomCard = (Card) entry.getValue();
+                        System.err.println("BOTTOM_CARD: " + conveyor.bottomCard);
                     }
                     case TOTAL_CARDS_NUMBER -> {
                         if ((Integer) entry.getValue() > 1) {
@@ -68,14 +68,24 @@ public class Commander extends Thread {
                         }
                     }
                     case CARDS_IN_TOWER -> {
-                        conveyor.cardsInTower.clear();
-                        conveyor.cardsInTower.addAll((Vector<Card>) entry.getValue());
+                        conveyor.cardsInTower = ((Vector<Card>) entry.getValue());
                     }
                     case CURRENT_PLAYER -> {
-                        conveyor.currentPlayer = (Integer) entry.getValue();
+                        if (entry.getValue() instanceof Integer) {
+                            Integer tmpUser = (Integer) entry.getValue();
+                            conveyor.currentPlayer = (tmpUser);
+                            System.err.println("CURRENT_PLAYER: " + conveyor.currentPlayer);
+                        } else {
+                            User tmpUser = (User) entry.getValue();
+                            conveyor.currentPlayer = (tmpUser).getInitialization();
+                            System.err.println("CURRENT_PLAYER: " + conveyor.currentPlayer);
+
+                        }
                     }
                     case CARDS_AT_PLAYER -> {
                         conveyor.playerCards = (Vector<Card>) entry.getValue();
+                        System.err.println("CARDS_AT_PLAYER: " + conveyor.playerCards);
+
                     }
                 }
             }

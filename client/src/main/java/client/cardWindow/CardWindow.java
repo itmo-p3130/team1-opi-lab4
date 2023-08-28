@@ -94,7 +94,6 @@ public class CardWindow {
             float dSeconds = dTime.asSeconds();
             window.clear(new Color(20, 120, 32, 255));
             window.draw(pokerTable);
-            bottomCard = conveyor.bottomCard;
             // for (int i = 0; i != 13 * 4; i++) {
             // cards.elementAt(i).draw(window);
             // }
@@ -105,8 +104,9 @@ public class CardWindow {
             } else {
                 window.draw(skipButton);
             }
-            window.draw(currentPlayer);
+            // window.draw(currentPlayer);
             if (conveyor.bottomCard != null) {
+                bottomCard = getCard(conveyor.bottomCard.getNum(), conveyor.bottomCard.getSuit());
                 bottomCard.getSprite().setPosition(1050, 200);
                 bottomCard.draw(window);
             }
@@ -147,12 +147,29 @@ public class CardWindow {
                                     req.addData(RequestConstants.SET_GAME_START, conveyor.userID);
                                     conveyor.client.sendTCP(req);
                                     conveyor.started = true;
-                                } else if (conveyor.started && skipButton.getGlobalBounds().contains(worldPos)) {
+                                } else if (conveyor.started && skipButton.getGlobalBounds().contains(worldPos)
+                                        && conveyor.currentPlayer == conveyor.userID) {
                                     Request req = new Request(conveyor.userID);
                                     req.setType(RequestConstants.SET_DATA_TO_GAME_SESSION);
                                     req.addData(RequestConstants.TURN_END, conveyor.userID);
                                     conveyor.client.sendTCP(req);
                                     conveyor.started = true;
+                                } else if (conveyor.started && conveyor.currentPlayer == conveyor.userID) {
+                                    for (int i = conveyor.playerCards.size() - 1; i >= 0; i--) {
+                                        if (generalPlayer.getCards().get(i).getSprite().getGlobalBounds()
+                                                .contains(worldPos)) {
+                                            Request req = new Request(conveyor.userID);
+                                            req.setType(RequestConstants.SET_DATA_TO_GAME_SESSION);
+                                            req.addData(RequestConstants.TURN_CARD_NUM,
+                                                    generalPlayer.getCards().get(i).getNum());
+                                            req.addData(RequestConstants.TURN_CARD_SUIT,
+                                                    generalPlayer.getCards().get(i).getSuit());
+                                            conveyor.client.sendTCP(req);
+                                            conveyor.cardsInTower.add(getCard(generalPlayer.getCards().get(i).getNum(),
+                                                    generalPlayer.getCards().get(i).getSuit()));
+                                            generalPlayer.getCards().remove(i);
+                                        }
+                                    }
                                 }
                                 break;
                             default:
@@ -298,21 +315,35 @@ public class CardWindow {
 
     public void updateInfoLabel() {
         String label = "";
-        for (Entry<Integer, User> e : conveyor.clients.entrySet()) {
-            label += e.getKey() + ": " + e.getValue().getCardsNumber() + ". ";
+        for (Entry<Integer, Integer> e : conveyor.clients.entrySet()) {
+            label += e.getKey() + ": " + e.getValue() + ". ";
         }
         this.infoLabel.setString(label);
     }
 
     public void updateCardsTower() {
+        this.cardsTower.deleteCards();
         for (int i = 0; i != conveyor.cardsInTower.size(); i++) {
-            this.cardsTower.addCard(new Card(conveyor.cardsInTower.get(i)));
+            this.cardsTower
+                    .addCard(getCard(conveyor.cardsInTower.get(i).getNum(), conveyor.cardsInTower.get(i).getSuit()));
         }
     }
 
     public void updateUserCards() {
-        for (int i = 0; i != conveyor.cardsInTower.size(); i++) {
-            this.generalPlayer.addCard(new Card(conveyor.playerCards.get(i)));
+        this.generalPlayer.deleteCards();
+        for (int i = 0; i != conveyor.playerCards.size(); i++) {
+            // this.generalPlayer
+            // .addCard(
+            // getCard(conveyor.playerCards.get(i).getNum(),
+            // conveyor.playerCards.get(i).getSuit()));
+            this.generalPlayer
+                    .addCard(
+                            getCard(conveyor.playerCards.get(i).getNum(), conveyor.playerCards.get(i).getSuit()));
+
+            // System.err.println(conveyor.playerCards.get(i).getSuit() + " " +
+            // conveyor.playerCards.get(i).getNum());
+            // System.err.println(conveyor.playerCards.size() + " " +
+            // generalPlayer.getCards().size());
         }
     }
 }

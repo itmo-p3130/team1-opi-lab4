@@ -31,4 +31,17 @@ public class Card {
     public Sprite getSprite() {
         return this.sprite;
     }
+
+    @Override
+    public String toString() {
+        return cardNum.name() + " " + cardSuit.name();
+    }
+
+    public CardNum getNum() {
+        return cardNum;
+    }
+
+    public CardSuit getSuit() {
+        return cardSuit;
+    }
 }

@@ -28,6 +28,7 @@ import client.cardWindow.Cards.CardSuit;
 import client.conveyor.Conveyor;
 import client.conveyor.Request;
 import client.conveyor.RequestConstants;
+import client.conveyor.User;
 import client.conveyor.ConveyorListener;
 
 public class IpWindow {
@@ -46,6 +47,7 @@ public class IpWindow {
         conveyor.client.getKryo().register(CardSuit.class);
         conveyor.client.getKryo().register(ArrayList.class);
         conveyor.client.getKryo().register(Vector.class);
+        conveyor.client.getKryo().register(User.class);
         conveyor.client.addListener(new ConveyorListener(this.conveyor) {
             public void received(Connection connection, Object obj) {
                 if (obj instanceof Request) {
@@ -66,7 +68,12 @@ public class IpWindow {
 
             @Override
             public void connected(com.esotericsoftware.kryonet.Connection connection) {
-                System.err.println("Connected from server");
+                conveyor.userID = connection.getID();
+                Request req = new Request(conveyor.userID);
+                req.setType(RequestConstants.CONNECT_TO_GAME_SESSION);
+                req.addData(RequestConstants.CONNECT_TO_GAME_SESSION, conveyor.userID);
+                connection.sendTCP(req);
+                System.err.println("Connected to server");
             }
         });
         conveyor.client.start();

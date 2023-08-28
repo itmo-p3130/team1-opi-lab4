@@ -56,7 +56,6 @@ public class Commander extends Thread {
                 getDataFromGameSession(req);
             }
             case SET_DATA_TO_GAME_SESSION -> {
-                connectToGameSession(req);
                 setDataToGameSession(req);
             }
             default -> {

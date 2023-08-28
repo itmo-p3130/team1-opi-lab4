@@ -8,15 +8,19 @@ import server.network.Request;
 import server.session.Session;
 
 public class User {
-    private String ip;
+    private transient String ip;
     private Integer init;
-    private Connection connection;
-    private Session session;
+    private transient Connection connection;
+    private transient Session session;
 
     public User(Integer initializationCode, Connection connection) {
         this.ip = connection.getRemoteAddressTCP().toString();
         this.init = initializationCode;
         this.connection = connection;
+    }
+
+    public User() {
+
     }
 
     public String getIp() {

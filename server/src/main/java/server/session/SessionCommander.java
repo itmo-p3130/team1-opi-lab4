@@ -89,7 +89,7 @@ public class SessionCommander extends Thread {
                         } else {
                             newRequest.addData(RequestConstants.STATUS, RequestConstants.FAILED);
                         }
-                        conveyor.responses.add(newRequest);
+                        conveyor.responses.addAll(ses.utilSendToAllCurrentGameSessionData());
                         return;
                     }
                     Object endTowerTurnOBJ = req.getData(RequestConstants.TURN_END);

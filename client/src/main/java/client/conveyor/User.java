@@ -5,15 +5,15 @@ import java.util.UUID;
 import com.esotericsoftware.kryonet.Connection;
 
 public class User {
-    private String init;
+    private Integer init;
     Integer cards;
 
-    public User(String initializationCode) {
+    public User(Integer initializationCode) {
         this.init = initializationCode;
         cards = 0;
     }
 
-    public String getInitialization() {
+    public Integer getInitialization() {
         return this.init;
     }
 

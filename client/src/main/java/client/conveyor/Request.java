@@ -8,24 +8,24 @@ import java.util.UUID;
 import com.esotericsoftware.kryonet.Connection;
 
 public class Request {
-    private final String initialization;
+    private final Integer initialization;
     private final HashMap<Object, Object> mapData;
     private Object requestType;
     private transient com.esotericsoftware.kryonet.Connection connection;
 
     public Request() {
-        this.initialization = "";
+        this.initialization = -1;
         this.mapData = new HashMap<>();
         this.requestType = "";
     }
 
-    public Request(String init) {
+    public Request(Integer init) {
         this.initialization = init;
         this.mapData = new HashMap<>();
         this.requestType = "";
     }
 
-    public String getInitialization() {
+    public Integer getInitialization() {
         return this.initialization;
     }
 

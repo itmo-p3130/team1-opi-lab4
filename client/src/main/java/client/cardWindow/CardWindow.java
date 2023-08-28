@@ -6,10 +6,14 @@ import client.cardWindow.Cards.CardNum;
 import client.cardWindow.Cards.CardSuit;
 import client.cardWindow.Players.Player;
 import client.conveyor.Conveyor;
+import client.conveyor.Request;
+import client.conveyor.RequestConstants;
+import client.conveyor.User;
 
 import org.jsfml.audio.Sound;
 import org.jsfml.graphics.*;
 import org.jsfml.graphics.Color;
+import org.jsfml.graphics.Font;
 import org.jsfml.graphics.Image;
 import org.jsfml.system.*;
 import org.jsfml.window.ContextActivationException;
@@ -25,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Random;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 public class CardWindow {
     public RenderWindow window;
@@ -39,16 +44,22 @@ public class CardWindow {
     private Vector<Card> cards;
     private Vector<Animation> animations;
     private Vector<Vector2f> positions;
-    private Vector<Player> players;
+    private Player cardsTower;
+    private Player generalPlayer;
+    private Font fnt;
+    Text infoLabel;
+    Card bottomCard;
+    Card towerCard;
 
     public CardWindow(Conveyor conv) {
         this.conveyor = conv;
         init();
-        initPlayersPoses(6);
-        new Player(worldPos);
-        for (Vector2f pos : positions) {
-            players.add(new Player(pos));
-        }
+        conveyor.bottomCard = getCard(CardNum.Ace, CardSuit.Tiles);
+        generalPlayer = new Player(new Vector2f(10, 450));
+        cardsTower = new Player(new Vector2f(10, 50));
+        generalPlayer.addCard(getBackCard());
+        generalPlayer.addCard(getBackCard());
+        generalPlayer.addCard(getBackCard());
         System.out.println(view.getCenter()); // 500-500
         System.out.println(view.getViewport());// 0 0 1 1
         System.out.println(view.getSize());// 1000 1000
@@ -74,21 +85,40 @@ public class CardWindow {
         currentPlayer.setFillColor(Color.GREEN);
         startButton.setPosition(380, 715);
         skipButton.setPosition(20, 800);
+        bottomCard = conveyor.bottomCard;
+        towerCard = getBackCard();
+        infoLabel = new Text("AWDADAWDAWDAWDAWDWAAWDWD", fnt, 18);
+        infoLabel.setPosition(10, 925);
         while (window.isOpen()) {
             Time dTime = frClock.restart();
             float dSeconds = dTime.asSeconds();
             window.clear(new Color(20, 120, 32, 255));
             window.draw(pokerTable);
+            bottomCard = conveyor.bottomCard;
             // for (int i = 0; i != 13 * 4; i++) {
             // cards.elementAt(i).draw(window);
             // }
-            for (Player p : players) {
-                p.drawCards(window);
+            cardsTower.drawCards(window);
+            generalPlayer.drawCards(window);
+            if (!conveyor.started) {
+                window.draw(startButton);
+            } else {
+                window.draw(skipButton);
             }
             window.draw(currentPlayer);
-            window.draw(skipButton);
-            window.draw(startButton);
+            if (conveyor.bottomCard != null) {
+                bottomCard.getSprite().setPosition(1050, 200);
+                bottomCard.draw(window);
+            }
+            if (conveyor.isMoreCards) {
+                towerCard.getSprite().setPosition(1050, 600);
+                towerCard.draw(window);
+            }
+            window.draw(infoLabel);
             window.display();
+            this.updateInfoLabel();
+            this.updateCardsTower();
+            this.updateUserCards();
             for (org.jsfml.window.event.Event event : window.pollEvents()) {
                 switch (event.type) {
                     case CLOSED -> {
@@ -111,7 +141,19 @@ public class CardWindow {
                             case LEFT:
                                 windowPos = Mouse.getPosition(window);
                                 worldPos = window.mapPixelToCoords(windowPos);
-                                System.out.println(worldPos);
+                                if (!conveyor.started && startButton.getGlobalBounds().contains(worldPos)) {
+                                    Request req = new Request(conveyor.userID);
+                                    req.setType(RequestConstants.SET_DATA_TO_GAME_SESSION);
+                                    req.addData(RequestConstants.SET_GAME_START, conveyor.userID);
+                                    conveyor.client.sendTCP(req);
+                                    conveyor.started = true;
+                                } else if (conveyor.started && skipButton.getGlobalBounds().contains(worldPos)) {
+                                    Request req = new Request(conveyor.userID);
+                                    req.setType(RequestConstants.SET_DATA_TO_GAME_SESSION);
+                                    req.addData(RequestConstants.TURN_END, conveyor.userID);
+                                    conveyor.client.sendTCP(req);
+                                    conveyor.started = true;
+                                }
                                 break;
                             default:
                                 break;
@@ -130,6 +172,7 @@ public class CardWindow {
         initCards();
         initWindowAndView();
         initAnimations();
+        initText();
     }
 
     private void initPokerTable() {
@@ -184,6 +227,17 @@ public class CardWindow {
         }
     }
 
+    public void initText() {
+        Font marvin = new Font();
+        try {
+            marvin.loadFromFile(Paths.get("Resources/Marvin.ttf"));
+        } catch (IOException ex) {
+            // Failed to load font
+            ex.printStackTrace();
+        }
+        this.fnt = marvin;
+    }
+
     private void initWindowAndView() {
         screenSize = this.getScreenSize();
         int size = (int) screenSize.x / 2;
@@ -209,19 +263,19 @@ public class CardWindow {
         return screenSize;
     }
 
-    private void initPlayersPoses(int count) {
-        positions = new Vector<>();
-        players = new Vector<Player>();
-        for (int i = 0; i != count; i++) {
-            double c = Math.cos((float) Math.PI * 2 / count * i + (float) Math.PI / 2);
-            double s = Math.sin((float) Math.PI * 2 / count * i + (float) Math.PI / 2);
-            Vector2f vecCen = view.getCenter();
-            c = c * 30 * 15 + vecCen.x / 1.35;
-            s = s * 30 * 10 + vecCen.y / 1.5;
-            System.out.println(c + "  " + s);
-            this.positions.add(new Vector2f((float) c, (float) s));
-        }
-    }
+    // private void initPlayersPoses(int count) {
+    // positions = new Vector<>();
+    // players = new Vector<Player>();
+    // for (int i = 0; i != count; i++) {
+    // double c = Math.cos((float) Math.PI * 2 / count * i + (float) Math.PI / 2);
+    // double s = Math.sin((float) Math.PI * 2 / count * i + (float) Math.PI / 2);
+    // Vector2f vecCen = view.getCenter();
+    // c = c * 30 * 15 + vecCen.x / 1.35;
+    // s = s * 30 * 10 + vecCen.y / 1.5;
+    // System.out.println(c + " " + s);
+    // this.positions.add(new Vector2f((float) c, (float) s));
+    // }
+    // }
 
     private Card getCard(CardNum crdNum, CardSuit crdSuit) {
         return this.cards.elementAt(CardNum.fromName(crdNum) * 4 + CardSuit.fromName(crdSuit));
@@ -229,5 +283,36 @@ public class CardWindow {
 
     private Card getBackCard() {
         return this.cards.elementAt(cards.size() - 1);
+    }
+
+    private Boolean getIsTouchBounds(Vector2f vec, Vector2f first, Vector2f second) {
+        if ((vec.x <= second.x && vec.x >= first.x) && (vec.y <= second.y && vec.y >= first.y)) {
+            return true;
+        }
+        return false;
+    }
+
+    public void updateNumberOfCardsAtPlayers() {
+
+    }
+
+    public void updateInfoLabel() {
+        String label = "";
+        for (Entry<Integer, User> e : conveyor.clients.entrySet()) {
+            label += e.getKey() + ": " + e.getValue().getCardsNumber() + ". ";
+        }
+        this.infoLabel.setString(label);
+    }
+
+    public void updateCardsTower() {
+        for (int i = 0; i != conveyor.cardsInTower.size(); i++) {
+            this.cardsTower.addCard(new Card(conveyor.cardsInTower.get(i)));
+        }
+    }
+
+    public void updateUserCards() {
+        for (int i = 0; i != conveyor.cardsInTower.size(); i++) {
+            this.generalPlayer.addCard(new Card(conveyor.playerCards.get(i)));
+        }
     }
 }

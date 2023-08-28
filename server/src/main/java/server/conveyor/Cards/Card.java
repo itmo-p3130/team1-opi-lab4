@@ -14,6 +14,10 @@ public class Card {
         this.cardSuit = CardSuit.fromId(card.cardSuit.id);
     }
 
+    public Card() {
+
+    }
+
     @Override
     public String toString() {
         return cardNum.name() + " " + cardSuit.name();

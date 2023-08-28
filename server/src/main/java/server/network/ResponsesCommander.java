@@ -1,7 +1,6 @@
 package server.network;
 
 import server.conveyor.Conveyor;
-import com.esotericsoftware.kryonet.Connection;
 
 public class ResponsesCommander extends Thread {
     private Conveyor conveyor;
@@ -30,10 +29,13 @@ public class ResponsesCommander extends Thread {
     private void sendBack() {
         while (!conveyor.responses.isEmpty()) {
             Request response = conveyor.responses.get(0);
-            com.esotericsoftware.kryonet.Connection con = response.getConnection();
-            con.sendTCP(response);
+            if (conveyor.connections.get(response.getInitialization()).isConnected()) {
+                conveyor.connections.get(response.getInitialization()).sendTCP(response);
+            }
             System.err.println("Sended: " + response.getType());
+            System.err.println(conveyor.responses.size() + " " + conveyor.requests.size());
             conveyor.responses.remove(response);
         }
     }
+
 }

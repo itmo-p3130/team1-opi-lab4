@@ -22,26 +22,19 @@ public class SessionCommander extends Thread {
     @Override
     public void run() {
         while (conveyor.isWorking) {
-            if (conveyor.sessions.isEmpty()) {
-                synchronized (conveyor.sessions) {
+            if (conveyor.session.getRequests().isEmpty()) {
+                synchronized (conveyor.session.getRequests()) {
                     try {
-                        conveyor.sessions.wait();
+                        conveyor.session.getRequests().wait();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             } else {
-                dodgeSessions();
+                handleRequest(conveyor.session.getRequests().firstElement(), conveyor.session);
+                conveyor.session.getRequests().remove(0);
             }
         }
-    }
-
-    private void dodgeSessions() {
-        conveyor.sessions.forEach(this::handleSession);
-    }
-
-    private void handleSession(String name, Session session) {
-
     }
 
     private void handleRequest(Request req, Session ses) {
@@ -64,14 +57,17 @@ public class SessionCommander extends Thread {
             }
             case SET_DATA_TO_GAME_SESSION -> {
                 HashMap<Object, Object> fields = req.getData();
-                Object uidOBJ = fields.get(RequestConstants.SET_GAME_START);
-                if (uidOBJ instanceof String) {// CHECKING FOR STARTING
-                    String uid = (String) uidOBJ;
-                    if (uid == ses.getOwner()) {
+                Integer uidOBJ = (Integer) fields.get(RequestConstants.SET_GAME_START);
+                if (uidOBJ instanceof Integer) {// CHECKING FOR STARTING
+                    Integer uid = (Integer) uidOBJ;
+                    System.err.println(ses.getOwner() + " " + uid);
+                    if (uid == ses.getOwner() || conveyor.connections.size() == 1) {
                         ses.logicSetGameStarts();
                         ses.logicGiveCardsToAllPlayers();
                         ses.logicChoseFirstPlayer();
                         conveyor.responses.addAll(ses.utilSendToAllCurrentGameSessionData());
+                        System.err.println("Session has been started");
+                        System.err.println("People in session: " + ses.getPlayers().size());
                     }
                 }
                 if (ses.isPlayNow()) {// FIGHT WITH SAME TOWER
@@ -97,15 +93,16 @@ public class SessionCommander extends Thread {
                         return;
                     }
                     Object endTowerTurnOBJ = req.getData(RequestConstants.TURN_END);
-                    if (ses.getAttackPlayer() == req.getInitialization()) {// CHECKING FOR ENDING OF FIGHT
+                    if (ses.getCurrentPlayer().getInitialization() == req.getInitialization()) {// CHECKING FOR ENDING
+                                                                                                // OF FIGHT
                         if (endTowerTurnOBJ instanceof String) {
                             if (ses.getCurrentPlayer().getInitialization() == req.getInitialization()
-                                    && ses.getAttackPlayer() == (String) endTowerTurnOBJ
+                                    && ses.getAttackPlayer() == (Integer) endTowerTurnOBJ
                                     && ses.getTurnCardsTower().size() >= 2) {
 
                                 ses.logicTowerTurnEnd();
                                 ses.logicGiveCardsToAllPlayers();
-                                String uid = ses.logicCheckIsThereWinner();
+                                Integer uid = ses.logicCheckIsThereWinner();
                                 ses.logicTurnToNextPlayer();
                                 if (uid != null) {
                                     ses.setGameToOver("The winner is " + uid);
@@ -114,11 +111,11 @@ public class SessionCommander extends Thread {
                         }
                     } else {
                         if (endTowerTurnOBJ instanceof String) {
-                            if (ses.getCurrentPlayer().getInitialization() == (String) endTowerTurnOBJ) {
+                            if (ses.getCurrentPlayer().getInitialization() == (Integer) endTowerTurnOBJ) {
                                 ses.logicPlayerTakeTower(req.getInitialization());
                                 ses.logicTowerTurnEnd();
                                 ses.logicGiveCardsToAllPlayers();
-                                String uid = ses.logicCheckIsThereWinner();
+                                Integer uid = ses.logicCheckIsThereWinner();
                                 if (uid != null) {
                                     ses.setGameToOver("The winner is " + uid);
                                 }
@@ -135,10 +132,13 @@ public class SessionCommander extends Thread {
             default -> {
                 Request newRequest;
                 newRequest = new Request(req.getInitialization());
+                System.err.println("Default block");
                 conveyor.responses.add(newRequest);
             }
         }
-        conveyor.responses.notifyAll();
+        synchronized (conveyor.responses) {
+            conveyor.responses.notifyAll();
+        }
 
     }
 }

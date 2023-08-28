@@ -20,6 +20,10 @@ public class Card {
         this.sprite.setScale(card.getSprite().getScale());
     }
 
+    public Card() {
+
+    }
+
     public void draw(RenderWindow window) {
         window.draw(this.sprite);
     }

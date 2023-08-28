@@ -11,19 +11,19 @@ import server.network.Request;
 import server.session.Session;
 
 public class Conveyor {
-    public final ConcurrentHashMap<String, User> clients;
-    public final ConcurrentHashMap<String, Session> sessions;
-    public final ConcurrentHashMap<Connection, String> connections;
+    public final ConcurrentHashMap<Integer, User> clients;
+    public final ConcurrentHashMap<Integer, com.esotericsoftware.kryonet.Connection> connections;
+    public final Session session;
     public final Vector<Request> requests;
     public final Vector<Request> responses;
     public Boolean isWorking;
 
     public Conveyor() {
         this.clients = new ConcurrentHashMap<>();
-        this.sessions = new ConcurrentHashMap<>();
         this.connections = new ConcurrentHashMap<>();
         this.requests = new Vector<>();
         this.responses = new Vector<>();
+        this.session = new Session("", -1);
         this.isWorking = true;
     }
 }

@@ -28,11 +28,11 @@ public class Session {
     private Card bottomCard;
     private Vector<Card> allCardsTower;
     private Vector<Card> turnCardsTower;
-    private HashMap<String, Vector<Card>> playersCards;
+    private HashMap<Integer, Vector<Card>> playersCards;
     private String name;
-    private String sessionOwner;
+    private Integer sessionOwner;
 
-    public Session(String name, String owner) {
+    public Session(String name, Integer owner) {
         this.players = new Vector<>();
         this.name = name;
         this.isPlayNow = false;
@@ -40,11 +40,17 @@ public class Session {
         this.bottomCard = this.allCardsTower.lastElement();
         this.playersCards = new HashMap<>();
         this.sessionOwner = owner;
+        this.requests = new Vector<>();
+        this.isOver = false;
     }
 
     public void addPlayer(User user) {
         players.add(user);
         playersCards.put(user.getInitialization(), new Vector<Card>());
+    }
+
+    public void setOwner(Integer uid) {
+        this.sessionOwner = uid;
     }
 
     public Vector<User> getPlayers() {
@@ -92,11 +98,11 @@ public class Session {
         return this.playerTurn;
     }
 
-    public void setCurrentPlayer(String uid) {
+    public void setCurrentPlayer(Integer uid) {
         this.playerTurn = findPlayer(uid);
     }
 
-    public User findPlayer(String uid) {
+    public User findPlayer(Integer uid) {
         for (User user : this.players) {
             if (user.getInitialization() == uid)
                 return user;
@@ -104,7 +110,7 @@ public class Session {
         return null;
     }
 
-    public List<String> getPlayersList() {
+    public List<Integer> getPlayersList() {
         return players.stream()
                 .map(User::getInitialization)
                 .collect(Collectors.toList());
@@ -136,19 +142,19 @@ public class Session {
         return this.turnCardsTower;
     }
 
-    public Vector<Card> getPlayerCards(String uid) {
+    public Vector<Card> getPlayerCards(Integer uid) {
         return this.playersCards.get(uid);
     }
 
-    public HashMap<String, Integer> getAllPlayersCards() {
-        HashMap<String, Integer> playersCards = new HashMap<>();
+    public HashMap<Integer, Integer> getAllPlayersCards() {
+        HashMap<Integer, Integer> playersCards = new HashMap<>();
         for (User user : this.players) {
             playersCards.put(user.getInitialization(), this.playersCards.get(user.getInitialization()).size());
         }
         return playersCards;
     }
 
-    public Boolean logicCanAddCardToTower(Card card, String player) {
+    public Boolean logicCanAddCardToTower(Card card, Integer player) {
         if (this.playerTurn.getInitialization() == player) {
             Card lastCard = this.turnCardsTower.lastElement();
             if (lastCard == null) {
@@ -185,7 +191,7 @@ public class Session {
         return false;
     }
 
-    public void logicPlayerTakeTower(String user) {
+    public void logicPlayerTakeTower(Integer user) {
         this.playersCards.get(user).addAll(this.turnCardsTower);
     }
 
@@ -204,10 +210,10 @@ public class Session {
 
     public void logicChoseFirstPlayer() {
         Random rnd = new Random();
-        this.playerTurn = this.players.get(rnd.nextInt(this.countOfPlayers - 1));
+        this.playerTurn = this.players.get(rnd.nextInt(this.countOfPlayers));
     }
 
-    public String logicCheckIsThereWinner() {
+    public Integer logicCheckIsThereWinner() {
         for (User user : this.players) {
             if (playersCards.get(user.getInitialization()).isEmpty() && allCardsTower.isEmpty()) {
                 return user.getInitialization();
@@ -244,17 +250,18 @@ public class Session {
             newRequest.addData(RequestConstants.BOTTOM_CARD, this.getBottomCard());
             newRequest.addData(RequestConstants.TOTAL_CARDS_NUMBER, this.getTotalCardsNumber());
             newRequest.addData(RequestConstants.ALL_PLAYERS_CARDS, this.getAllPlayersCards());
-            newRequest.addData(RequestConstants.IS_GAME_PLAYING, this.reasonForOvering);
+            newRequest.addData(RequestConstants.IS_GAME_PLAYING, this.isPlayNow);
             reqs.add(newRequest);
         }
-        return requests;
+
+        return reqs;
     }
 
-    public String getOwner() {
+    public Integer getOwner() {
         return this.sessionOwner;
     }
 
-    public String getAttackPlayer() {
+    public Integer getAttackPlayer() {
         return this.playerAttack.getInitialization();
     }
 }

@@ -4,8 +4,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +23,8 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import client.cardWindow.Cards.Card;
+import client.cardWindow.Cards.CardNum;
+import client.cardWindow.Cards.CardSuit;
 import client.conveyor.Conveyor;
 import client.conveyor.Request;
 import client.conveyor.RequestConstants;
@@ -32,17 +36,23 @@ public class IpWindow {
     public IpWindow(Conveyor con) {
         this.conveyor = con;
         conveyor.client.getKryo().register(Request.class);
-        conveyor.client.getKryo().register(Request.class);
         conveyor.client.getKryo().register(Object.class);
         conveyor.client.getKryo().register(String.class);
         conveyor.client.getKryo().register(Card.class);
         conveyor.client.getKryo().register(HashMap.class);
+        conveyor.client.getKryo().register(RequestConstants.class);
+        conveyor.client.getKryo().register(Card.class);
+        conveyor.client.getKryo().register(CardNum.class);
+        conveyor.client.getKryo().register(CardSuit.class);
+        conveyor.client.getKryo().register(ArrayList.class);
+        conveyor.client.getKryo().register(Vector.class);
         conveyor.client.addListener(new ConveyorListener(this.conveyor) {
             public void received(Connection connection, Object obj) {
                 if (obj instanceof Request) {
                     Request req = (Request) obj;
                     req.setConnection(connection);
                     conveyor.requests.add(req);
+                    System.err.println("Ner req: " + req.getType());
                     synchronized (conveyor.requests) {
                         conveyor.requests.notifyAll();
                     }
@@ -80,7 +90,7 @@ public class IpWindow {
         panel.add(textField);
         panel2.add(label2);
         panel2.add(nameField);
-        panel.add(panel2);
+        // panel.add(panel2);
         panel.add(exitButton);
         panel.add(connectButton);
 

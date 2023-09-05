@@ -42,19 +42,6 @@ public class SessionCommander extends Thread {
         HashMap<Object, Object> data = req.getData();
         Object type = req.getType();
         switch ((RequestConstants) type) {
-            case GET_DATA_FROM_GAME_SESSION -> {
-                Request newRequest;
-                newRequest = new Request(req.getInitialization());
-                newRequest.setType(RequestConstants.GET_DATA_FROM_GAME_SESSION);
-                newRequest.addData(RequestConstants.PLAYERS_IN_SESSION, ses.getPlayersList());
-                newRequest.addData(RequestConstants.CURRENT_PLAYER, ses.getCurrentPlayer().getInitialization());
-                newRequest.addData(RequestConstants.CARDS_AT_PLAYER, ses.getPlayerCards(req.getInitialization()));
-                newRequest.addData(RequestConstants.CARDS_IN_TOWER, ses.getTurnCardsTower());
-                newRequest.addData(RequestConstants.BOTTOM_CARD, ses.getBottomCard());
-                newRequest.addData(RequestConstants.TOTAL_CARDS_NUMBER, ses.getTotalCardsNumber());
-                newRequest.addData(RequestConstants.ALL_PLAYERS_CARDS, ses.getAllPlayersCards());
-                conveyor.responses.add(newRequest);
-            }
             case SET_DATA_TO_GAME_SESSION -> {
                 HashMap<Object, Object> fields = req.getData();
                 Integer uidOBJ = (Integer) fields.get(RequestConstants.SET_GAME_START);

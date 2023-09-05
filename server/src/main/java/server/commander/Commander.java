@@ -52,9 +52,6 @@ public class Commander extends Thread {
             case QUIT_FROM_GAME_SESSION -> {
                 quitFromGameSession(req);
             }
-            case GET_DATA_FROM_GAME_SESSION -> {
-                getDataFromGameSession(req);
-            }
             case SET_DATA_TO_GAME_SESSION -> {
                 setDataToGameSession(req);
             }

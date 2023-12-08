@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fa781e13-b7e1-4831-9b52-3dde425f1e3f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/chatWindow/ChatWindow.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/commander/Commander.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/commander/Commander.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/session/SessionCommander.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/session/SessionCommander.java" afterDir="false" />
-    </list>
+    <list default="true" id="fa781e13-b7e1-4831-9b52-3dde425f1e3f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,7 +115,7 @@
       <workItem from="1689197817095" duration="1940000" />
       <workItem from="1689291841063" duration="4015000" />
       <workItem from="1689397269542" duration="11936000" />
-      <workItem from="1702065544667" duration="1116000" />
+      <workItem from="1702065544667" duration="1702000" />
     </task>
     <servers />
   </component>

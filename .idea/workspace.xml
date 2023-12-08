@@ -5,25 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fa781e13-b7e1-4831-9b52-3dde425f1e3f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/AnimFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/Animation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseInOutQuint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseInOutSine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/EaseOutQuart.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/FastStartFastStop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Animation/TimeLines/TimelineFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/Card.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/CardNum.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Cards/CardSuit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/Card.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardNum.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardSuit.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/main/java/client/cardWindow/CardWindow.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/main/java/client/chatWindow/ChatWindow.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/commander/Commander.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/commander/Commander.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/main/java/server/session/SessionCommander.java" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/main/java/server/session/SessionCommander.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +35,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 0
+}]]></component>
   <component name="ProjectId" id="2O8H2Et1Iu7t101Pj7xBZYJsjte" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -53,7 +47,8 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "G:/Мой диск/Lab5_CommandClient",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "G:/My Drive/Lab5_CommandClient",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -84,6 +79,7 @@
         <option name="myRunnerSettings" />
         <option name="myRunnerParameters">
           <MavenRunnerParameters>
+            <option name="cmdOptions" />
             <option name="profiles">
               <set />
             </option>
@@ -97,6 +93,9 @@
             <option name="pomFileName" />
             <option name="profilesMap">
               <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
             </option>
             <option name="resolveToWorkspace" value="false" />
             <option name="workingDirPath" value="G:\Мой диск\Lab5_CommandClient\Client" />
@@ -127,6 +126,7 @@
       <workItem from="1689197817095" duration="1940000" />
       <workItem from="1689291841063" duration="4015000" />
       <workItem from="1689397269542" duration="11936000" />
+      <workItem from="1702065544667" duration="1116000" />
     </task>
     <servers />
   </component>

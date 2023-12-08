@@ -1,6 +1,5 @@
 package client.cardWindow;
 
-import client.cardWindow.Animation.Animation;
 import client.cardWindow.Cards.Card;
 import client.cardWindow.Cards.CardNum;
 import client.cardWindow.Cards.CardSuit;
@@ -42,7 +41,6 @@ public class CardWindow {
     private Clock frClock;
     private Conveyor conveyor;
     private Vector<Card> cards;
-    private Vector<Animation> animations;
     private Vector<Vector2f> positions;
     private Player cardsTower;
     private Player generalPlayer;
@@ -188,7 +186,6 @@ public class CardWindow {
         initPokerTable();
         initCards();
         initWindowAndView();
-        initAnimations();
         initText();
     }
 
@@ -267,10 +264,6 @@ public class CardWindow {
         window.setView(view);
     }
 
-    private void initAnimations() {
-        animations = new Vector<>();
-        frClock = new Clock();
-    }
 
     private Vector2f getScreenSize() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();

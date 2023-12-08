@@ -117,10 +117,6 @@ public class SessionCommander extends Thread {
                 }
             }
             default -> {
-                Request newRequest;
-                newRequest = new Request(req.getInitialization());
-                System.err.println("Default block");
-                conveyor.responses.add(newRequest);
             }
         }
         synchronized (conveyor.responses) {
